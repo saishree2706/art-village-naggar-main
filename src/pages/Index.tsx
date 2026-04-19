@@ -17,7 +17,7 @@ import summerGoldSuite from "@/assets/Summer Gold Duplex Suite/Summer Gold Duple
 import springGreenRoom from "@/assets/Spring Green Attic Room/Spring Green Attic Room 1.webp";
 // Experience images
 import expCultural from "@/assets/experiences/20260220-P1034047.jpg";
-import expCooking from "@/assets/experiences/Pizza.jpg";
+import expCooking from "@/assets/experiences/pizza.jpg";
 import expHikes from "@/assets/experiences/20180311-_DSC0492.jpg";
 import expStargazing from "@/assets/experiences/20190109-_DSC0741.jpg";
 import expForest from "@/assets/experiences/IMG_20180918_165742.jpg";
