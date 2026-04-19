@@ -1,0 +1,58 @@
+{
+  "name": "ART - Adaptive Rural Tourism",
+  "short_name": "ART",
+  "description": "Community organization rethinking rural spaces. Volunteer programs and collaborations in Chachogi village, Himachal Pradesh.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf9f7",
+  "theme_color": "#1a1a1a",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "Collaborate",
+      "url": "/collaborate",
+      "description": "Volunteer and collaboration programs"
+    },
+    {
+      "name": "Book a Stay",
+      "url": "/stays",
+      "description": "View accommodation options"
+    },
+    {
+      "name": "Contact Us",
+      "url": "/contact",
+      "description": "Get in touch"
+    }
+  ]
+}

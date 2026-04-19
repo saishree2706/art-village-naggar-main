@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx vite:*)",
+      "Bash(awk '{print $NF}')",
+      "Bash(node -e \"const globals = require\\('./node_modules/globals/index.js'\\); console.log\\(Object.keys\\(globals\\).slice\\(0,20\\)\\);\")",
+      "Bash(npx eslint:*)",
+      "Bash(find /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets -type f \\\\\\( -name \"*.jpg\" -o -name \"*.png\" -o -name \"*.jpeg\" \\\\\\) -exec ls -lh {} \\\\;)",
+      "Bash(awk '{print $5, $9}')",
+      "Bash(awk '$1 ~ /M/ || \\($1 ~ /K/ && int\\($1\\) > 200\\) {print}')",
+      "Bash(find /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/pages -name \"*.tsx\" -exec wc -l {} \\\\;)",
+      "Bash(awk '{lines=$1; file=$2} END {if\\(lines>300\\) print lines\" lines\"}')",
+      "Bash(find:*)",
+      "Bash(wc -l /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/pages/*.tsx)",
+      "Bash(ls:*)",
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(vercel dev:*)",
+      "Bash(kill %1)",
+      "Bash(wait)",
+      "Bash(NODE_TLS_REJECT_UNAUTHORIZED=0 vercel dev --listen 3000)",
+      "Bash(node -e \"require\\('sharp'\\)\")",
+      "Bash(awk '{sum += $1} END {print \"Total to delete: \" sum \"K\"}')",
+      "Bash(rm -f /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/Collaborate/volounteer.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/balcony-view.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/balcony-view.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/wood-texture-alt.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/wood-texture-alt.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/experience-workshop.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/experience-workshop.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/kathkuni-door.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/kathkuni-door.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/village-life.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/village-life.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/night-architecture.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/night-architecture.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/foraging-portrait.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/foraging-portrait.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery-village-panorama.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery-village-panorama.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/hands-working.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/hands-working.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/village-elder.jpg /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/village-elder.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/ART_white_logo.png '/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/our story/wood-texture1.jpg' '/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/Heritage Wing \\(4 Bedrooms\\)/Heritage Wing \\(4 Bedrooms\\).webp' '/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 42.webp' '/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 44.webp' '/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 46.webp' '/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 48.webp' '/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 52.webp' '/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 53.webp' /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery56.webp /c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/57.webp '/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 28].webp')",
+      "Bash(rmdir '/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/Heritage Wing \\(4 Bedrooms\\)')",
+      "Bash(rmdir \"/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 39\")",
+      "Bash(rmdir \"/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/Heritage Wing \\(4 Bedrooms\\)\")",
+      "Bash(rm \"/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 39/.webp\")",
+      "Bash(xargs grep *)"
+    ]
+  }
+}

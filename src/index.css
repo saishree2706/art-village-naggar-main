@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Warm earth-tone palette */
+    --background: 36 33% 97%;
+    --foreground: 24 10% 10%;
+
+    --card: 36 33% 97%;
+    --card-foreground: 24 10% 10%;
+
+    --popover: 36 33% 97%;
+    --popover-foreground: 24 10% 10%;
+
+    --primary: 28 56% 30%;
+    --primary-foreground: 36 33% 97%;
+
+    --secondary: 30 20% 90%;
+    --secondary-foreground: 24 10% 10%;
+
+    --muted: 30 15% 92%;
+    --muted-foreground: 24 8% 45%;
+
+    --accent: 150 20% 28%;
+    --accent-foreground: 36 33% 97%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 30 15% 85%;
+    --input: 30 15% 85%;
+    --ring: 28 56% 30%;
+
+    --radius: 0.25rem;
+
+    /* Custom brand tokens */
+    --wood-amber: 28 56% 30%;
+    --stone-grey: 220 5% 50%;
+    --forest-green: 150 20% 28%;
+    --fire-glow: 25 90% 55%;
+    --warm-cream: 36 33% 97%;
+    --deep-charcoal: 24 10% 10%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 24 10% 8%;
+    --foreground: 36 33% 93%;
+
+    --card: 24 10% 10%;
+    --card-foreground: 36 33% 93%;
+
+    --popover: 24 10% 10%;
+    --popover-foreground: 36 33% 93%;
+
+    --primary: 30 50% 55%;
+    --primary-foreground: 24 10% 8%;
+
+    --secondary: 24 10% 15%;
+    --secondary-foreground: 36 33% 93%;
+
+    --muted: 24 10% 15%;
+    --muted-foreground: 30 10% 60%;
+
+    --accent: 150 15% 35%;
+    --accent-foreground: 36 33% 93%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 24 10% 18%;
+    --input: 24 10% 18%;
+    --ring: 30 50% 55%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Libre Caslon Text', serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Libre Caslon Display', serif;
+  }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: 'Libre Caslon Display', serif;
+  }
+
+  .font-sans {
+    font-family: 'Libre Caslon Text', serif;
+  }
+
+  .libre-caslon-display-regular {
+    font-family: 'Libre Caslon Display', serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
