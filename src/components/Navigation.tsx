@@ -10,7 +10,7 @@ const exploreLinks = [
   { to: "/experiences", label: "Experiences" },
   { to: "/dining", label: "Dining" },
   { to: "/gallery", label: "Gallery" },
-  { to: "/shepherd-magazine", label: "Shepherd Magazine", external: true },
+  { to: "/shepherd-magazine", label: "Shepherd Magazine" },
   { to: "/story", label: "Our Story" },
 ];
 
