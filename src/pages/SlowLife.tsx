@@ -8,7 +8,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { EASING, HERO_TIMING } from "@/lib/animations";
 // Slow Life images
-import heroImage from "@/assets/slow-life/IMG_3840.JPG";
+import heroImage from "@/assets/slow-life/img_3840.jpg";
 import consciousTravel from "@/assets/slow-life/20260220-P1034047.jpg";
 import therapeuticRelax from "@/assets/slow-life/20241011_183347_060.jpg";
 import contextualLifestyle from "@/assets/slow-life/slow life 1.jpg";
