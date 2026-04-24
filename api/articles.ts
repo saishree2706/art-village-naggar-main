@@ -38,6 +38,7 @@ export interface NotionArticle {
   readTime: string;
   category: string;
   coverImage: string | null;
+  video: string | null;
   published: boolean;
 }
 
@@ -99,6 +100,7 @@ async function getArticles(): Promise<NotionArticle[]> {
       readTime: getPropertyValue(properties.ReadTime) || "5 min read",
       category: getPropertyValue(properties.Category) || "General",
       coverImage: getPropertyValue(properties.CoverImage) || page.cover?.external?.url || page.cover?.file?.url || null,
+      video: getPropertyValue(properties.Video) || null,
       published: getPropertyValue(properties.Published),
     };
   });

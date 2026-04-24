@@ -28,7 +28,12 @@
       "Bash(rmdir \"/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 39\")",
       "Bash(rmdir \"/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/Heritage Wing \\(4 Bedrooms\\)\")",
       "Bash(rm \"/c/Users/venkata.saishree/Documents/art-village-naggar-main/art-village-naggar-main/src/assets/gallery/Gallery 39/.webp\")",
-      "Bash(xargs grep *)"
+      "Bash(xargs grep *)",
+      "Bash(vercel *)",
+      "Bash(set NODE_TLS_REJECT_UNAUTHORIZED=0)",
+      "PowerShell(vercel dev *)",
+      "Bash(netstat -ano)",
+      "Bash(curl -s http://localhost:3000/api/articles)"
     ]
   }
 }

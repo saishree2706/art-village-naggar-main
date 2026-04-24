@@ -9,6 +9,7 @@ export interface Article {
   readTime: string;
   category: string;
   coverImage: string | null;
+  video: string | null;
   published: boolean;
 }
 

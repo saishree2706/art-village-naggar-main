@@ -1,4 +1,5 @@
-import { useParams, Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -7,58 +8,67 @@ import PageTransition from "@/components/PageTransition";
 import SEO from "@/components/SEO";
 import { BlogPostSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import { SITE_URL } from "@/lib/seo";
+import { EASING } from "@/lib/animations";
+import { getVideoEmbed } from "@/lib/utils";
 import { useNotionArticle, formatArticleDate, type ContentBlock } from "@/hooks/useNotionArticle";
 
 const DEFAULT_COVER = "/og/magazine.jpg";
 
-function renderBlock(block: ContentBlock, index: number) {
+function renderBlock(block: ContentBlock, index: number, isFirstParagraph: boolean) {
   switch (block.type) {
     case "paragraph":
       return (
-        <p key={index} className="font-sans text-base text-muted-foreground leading-relaxed mb-6">
+        <p
+          key={index}
+          className={
+            isFirstParagraph
+              ? "font-sans text-base text-foreground/80 leading-[1.9] mb-6 first-letter:text-5xl first-letter:font-serif first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-none first-letter:text-foreground"
+              : "font-sans text-base text-foreground/80 leading-[1.9] mb-6"
+          }
+        >
           {block.content}
         </p>
       );
 
     case "heading_1":
       return (
-        <h2 key={index} className="font-serif text-3xl md:text-4xl leading-[1.3] mt-12 mb-6">
+        <h2 key={index} className="font-serif text-3xl md:text-4xl leading-[1.25] mt-14 mb-6 pt-4 border-t border-border">
           {block.content}
         </h2>
       );
 
     case "heading_2":
       return (
-        <h3 key={index} className="font-serif text-2xl md:text-3xl leading-[1.3] mt-10 mb-5">
+        <h3 key={index} className="font-serif text-2xl md:text-3xl leading-[1.3] mt-12 mb-5">
           {block.content}
         </h3>
       );
 
     case "heading_3":
       return (
-        <h4 key={index} className="font-serif text-xl md:text-2xl leading-[1.3] mt-8 mb-4">
+        <h4 key={index} className="font-serif text-xl md:text-2xl leading-[1.3] mt-10 mb-4">
           {block.content}
         </h4>
       );
 
     case "bulleted_list_item":
       return (
-        <li key={index} className="font-sans text-base text-muted-foreground leading-relaxed ml-6 mb-2 list-disc">
+        <li key={index} className="font-sans text-base text-foreground/80 leading-[1.8] ml-5 mb-2 list-disc">
           {block.content}
         </li>
       );
 
     case "numbered_list_item":
       return (
-        <li key={index} className="font-sans text-base text-muted-foreground leading-relaxed ml-6 mb-2 list-decimal">
+        <li key={index} className="font-sans text-base text-foreground/80 leading-[1.8] ml-5 mb-2 list-decimal">
           {block.content}
         </li>
       );
 
     case "quote":
       return (
-        <blockquote key={index} className="border-l-2 border-foreground/20 pl-6 my-8 italic">
-          <p className="font-serif text-xl text-foreground/80 leading-relaxed">
+        <blockquote key={index} className="border-l-[3px] border-primary pl-6 my-10 md:my-12">
+          <p className="font-serif text-xl md:text-2xl italic text-foreground leading-[1.5]">
             {block.content}
           </p>
         </blockquote>
@@ -66,7 +76,7 @@ function renderBlock(block: ContentBlock, index: number) {
 
     case "callout":
       return (
-        <div key={index} className="bg-secondary/50 border border-border p-6 my-8">
+        <div key={index} className="bg-secondary/40 border-l-[3px] border-foreground/20 pl-6 py-5 my-8">
           <p className="font-sans text-base text-foreground leading-relaxed">
             {block.content}
           </p>
@@ -74,11 +84,17 @@ function renderBlock(block: ContentBlock, index: number) {
       );
 
     case "divider":
-      return <hr key={index} className="border-border my-12" />;
+      return (
+        <div key={index} className="flex items-center gap-4 my-12">
+          <div className="h-px flex-1 bg-border" />
+          <span className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted-foreground/60">· · ·</span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+      );
 
     case "image":
       return (
-        <figure key={index} className="my-10">
+        <figure key={index} className="my-12 -mx-4 md:-mx-12">
           <img
             src={block.url}
             alt={block.caption || ""}
@@ -86,7 +102,7 @@ function renderBlock(block: ContentBlock, index: number) {
             loading="lazy"
           />
           {block.caption && (
-            <figcaption className="font-sans text-sm text-muted-foreground mt-3 text-center">
+            <figcaption className="font-sans text-xs text-muted-foreground mt-3 text-center tracking-[0.1em]">
               {block.caption}
             </figcaption>
           )}
@@ -114,23 +130,28 @@ const BlogPost = () => {
     return (
       <PageTransition>
         <main className="bg-background overflow-x-hidden">
-          <Navigation />
-          <section className="pt-28 pb-16 md:pt-40 md:pb-36 px-5 md:px-12">
-            <div className="max-w-3xl mx-auto">
-              <div className="animate-pulse">
-                <div className="h-4 bg-secondary rounded w-24 mb-4" />
-                <div className="h-12 bg-secondary rounded w-3/4 mb-8" />
-                <div className="h-4 bg-secondary rounded w-32 mb-12" />
-                <div className="aspect-[16/9] bg-secondary rounded mb-12" />
-                <div className="space-y-4">
-                  <div className="h-4 bg-secondary rounded w-full" />
-                  <div className="h-4 bg-secondary rounded w-5/6" />
-                  <div className="h-4 bg-secondary rounded w-4/5" />
-                </div>
-              </div>
+          <Navigation variant="magazine" />
+          <div className="pt-28 md:pt-36 px-5 md:px-12">
+            <div className="max-w-3xl mx-auto animate-pulse">
+              <div className="h-[3px] bg-secondary mb-8" />
+              <div className="h-2 bg-secondary w-1/4 mb-6" />
+              <div className="h-12 bg-secondary w-3/4 mb-4" />
+              <div className="h-5 bg-secondary w-full mb-2" />
+              <div className="h-5 bg-secondary w-2/3 mb-8" />
+              <div className="h-px bg-secondary mb-4" />
+              <div className="h-2 bg-secondary w-20 mb-8" />
+              <div className="h-[3px] bg-secondary mb-10" />
             </div>
-          </section>
-          <Footer />
+            <div className="max-w-5xl mx-auto animate-pulse">
+              <div className="aspect-[16/9] bg-secondary mb-12" />
+            </div>
+            <div className="max-w-2xl mx-auto animate-pulse space-y-4 pb-24">
+              <div className="h-3 bg-secondary w-full" />
+              <div className="h-3 bg-secondary w-5/6" />
+              <div className="h-3 bg-secondary w-4/5" />
+            </div>
+          </div>
+          <Footer variant="magazine" />
         </main>
       </PageTransition>
     );
@@ -141,29 +162,29 @@ const BlogPost = () => {
     return (
       <PageTransition>
         <main className="bg-background overflow-x-hidden">
-          <Navigation />
-          <section className="pt-28 pb-16 md:pt-40 md:pb-36 px-5 md:px-12">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="font-serif text-3xl md:text-4xl mb-6">
-                {(error as Error)?.message === "Article not found"
-                  ? "Article not found"
-                  : "Something went wrong"}
+          <Navigation variant="magazine" />
+          <section className="pt-28 md:pt-36 px-5 md:px-12 pb-24">
+            <div className="max-w-3xl mx-auto">
+              <div className="h-[3px] bg-foreground mb-8" />
+              <h1 className="font-serif text-3xl md:text-4xl mb-4">
+                {(error as Error)?.message === "Article not found" ? "Article not found" : "Something went wrong"}
               </h1>
-              <p className="font-sans text-base text-muted-foreground mb-8">
+              <p className="font-sans text-sm text-muted-foreground leading-relaxed mb-10">
                 {(error as Error)?.message === "Article not found"
-                  ? "The article you're looking for doesn't exist or has been unpublished."
+                  ? "This article doesn't exist or has been unpublished."
                   : "We couldn't load this article. Please try again later."}
               </p>
+              <div className="h-[3px] bg-foreground mb-8" />
               <Link
                 to="/shepherd-magazine"
-                className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.2em] uppercase border-b border-foreground/30 pb-1 hover:border-foreground transition-all duration-500"
+                className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors"
               >
-                <ArrowLeft className="w-4 h-4" />
-                Back to all articles
+                <ArrowLeft className="w-3.5 h-3.5" />
+                Return to The Shepherd
               </Link>
             </div>
           </section>
-          <Footer />
+          <Footer variant="magazine" />
         </main>
       </PageTransition>
     );
@@ -171,11 +192,13 @@ const BlogPost = () => {
 
   const coverImage = article.coverImage || DEFAULT_COVER;
   const articleUrl = `${SITE_URL}/shepherd-magazine/${article.slug}`;
+  const videoEmbed = getVideoEmbed(article.video ?? null);
+  const firstParaIndex = article.content.findIndex((b) => b.type === "paragraph");
 
   return (
     <PageTransition>
       <SEO
-        title={`${article.title} | ART - Adaptive Rural Tourism`}
+        title={`${article.title} | The Shepherd`}
         description={article.excerpt}
         ogImage={coverImage}
         ogType="article"
@@ -195,78 +218,166 @@ const BlogPost = () => {
       <BreadcrumbSchema
         items={[
           { name: "Home", url: SITE_URL },
-          { name: "Shepherd Magazine", url: `${SITE_URL}/shepherd-magazine` },
+          { name: "The Shepherd", url: `${SITE_URL}/shepherd-magazine` },
           { name: article.title, url: articleUrl },
         ]}
       />
-      <main className="bg-background overflow-x-hidden">
-        <Navigation />
 
-        {/* Header */}
-        <section className="pt-28 pb-6 md:pt-40 md:pb-12 px-5 md:px-12">
+      <main className="bg-background overflow-x-hidden">
+        <Navigation variant="magazine" />
+
+        {/* ── ARTICLE HEADER ── */}
+        <header className="pt-28 md:pt-36 px-5 md:px-12">
           <div className="max-w-3xl mx-auto">
-            <ScrollReveal>
+
+            {/* Back link */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, ease: EASING }}
+            >
               <Link
                 to="/shepherd-magazine"
-                className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-8"
+                className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-6"
               >
-                <ArrowLeft className="w-4 h-4" />
-                All articles
+                <ArrowLeft className="w-3.5 h-3.5" />
+                The Shepherd
               </Link>
+            </motion.div>
 
-              <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
-                {article.category} · {formatArticleDate(article.date)}
-              </p>
+            {/* Top thick rule */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.5, ease: EASING }}
+              className="h-[3px] bg-foreground origin-left mb-6"
+            />
 
-              <h1 className="font-serif text-3xl md:text-5xl leading-[1.2] mb-6">
-                {article.title}
-              </h1>
+            {/* Category + date */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
+              className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-5"
+            >
+              {article.category}
+              {article.date && (
+                <> · {formatArticleDate(article.date)}</>
+              )}
+            </motion.p>
 
-              <p className="font-sans text-sm text-muted-foreground">
+            {/* Title */}
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.5, ease: EASING }}
+              className="font-serif text-3xl sm:text-4xl md:text-5xl leading-[1.15] mb-6"
+            >
+              {article.title}
+            </motion.h1>
+
+            {/* Excerpt as italic deck */}
+            {article.excerpt && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.35, duration: 0.4 }}
+                className="font-serif italic text-lg text-muted-foreground leading-relaxed mb-6"
+              >
+                {article.excerpt}
+              </motion.p>
+            )}
+
+            {/* Thin rule + read time */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.4 }}
+            >
+              <div className="h-px bg-border mb-4" />
+              <p className="font-sans text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-4">
                 {article.readTime}
               </p>
-            </ScrollReveal>
-          </div>
-        </section>
+              <div className="h-[3px] bg-foreground" />
+            </motion.div>
 
-        {/* Cover Image */}
-        <section className="px-5 md:px-12 mb-10 md:mb-12">
+          </div>
+        </header>
+
+        {/* ── COVER IMAGE ── wider than text column */}
+        <section className="px-5 md:px-8 my-10 md:my-14">
           <ScrollReveal>
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <div className="aspect-[16/9] overflow-hidden">
                 <img
                   src={coverImage}
                   alt={article.title}
                   className="w-full h-full object-cover"
+                  loading="eager"
                 />
               </div>
             </div>
           </ScrollReveal>
         </section>
 
-        {/* Content */}
-        <section className="px-5 md:px-12 pb-16 md:pb-24">
-          <div className="max-w-3xl mx-auto">
+        {/* ── INLINE VIDEO (if present) ── */}
+        {videoEmbed && (
+          <section className="px-5 md:px-8 mb-10 md:mb-14">
             <ScrollReveal>
-              <div className="prose-custom">
-                {article.content.map((block, index) => renderBlock(block, index))}
+              <div className="max-w-4xl mx-auto">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="h-px flex-1 bg-border" />
+                  <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-muted-foreground whitespace-nowrap">
+                    Watch the Story
+                  </span>
+                  <div className="h-px flex-1 bg-border" />
+                </div>
+                <div className="aspect-video">
+                  {videoEmbed.type === "iframe" ? (
+                    <iframe
+                      src={videoEmbed.src}
+                      className="w-full h-full"
+                      allowFullScreen
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      title={article.title}
+                    />
+                  ) : (
+                    <video
+                      src={videoEmbed.src}
+                      controls
+                      className="w-full h-full"
+                      title={article.title}
+                    />
+                  )}
+                </div>
               </div>
             </ScrollReveal>
+          </section>
+        )}
 
-            {/* Back link */}
-            <div className="mt-16 pt-8 border-t border-border">
+        {/* ── ARTICLE CONTENT ── narrow column for readability */}
+        <section className="px-5 md:px-12 pb-16 md:pb-28">
+          <div className="max-w-2xl mx-auto">
+            <ScrollReveal>
+              {article.content.map((block, index) =>
+                renderBlock(block, index, index === firstParaIndex)
+              )}
+            </ScrollReveal>
+
+            {/* Editorial back link */}
+            <div className="mt-16 pt-6 border-t-[3px] border-foreground">
               <Link
                 to="/shepherd-magazine"
-                className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors"
+                className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors"
               >
-                <ArrowLeft className="w-4 h-4" />
-                Back to all articles
+                <ArrowLeft className="w-3.5 h-3.5" />
+                Return to The Shepherd
               </Link>
             </div>
           </div>
         </section>
 
-        <Footer />
+        <Footer variant="magazine" />
       </main>
     </PageTransition>
   );

@@ -6,10 +6,11 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import PageTransition from "@/components/PageTransition";
 import SEO from "@/components/SEO";
-import { EASING, HERO_TIMING } from "@/lib/animations";
+import { EASING } from "@/lib/animations";
+import { getVideoEmbed } from "@/lib/utils";
 import { useNotionArticles, fallbackArticles, formatArticleDate, type Article } from "@/hooks/useNotionArticles";
+import { useNotionProjects } from "@/hooks/useNotionProjects";
 
-// Default images for articles without cover images
 import blogKathkuni from "@/assets/blog-kathkuni-detail.jpg";
 import blogSeasons from "@/assets/blog-seasons.jpg";
 import blogFood from "@/assets/blog-food.jpg";
@@ -24,64 +25,27 @@ function getArticleImage(article: Article, index: number): string {
   return defaultImages[index % defaultImages.length];
 }
 
-// ---------------------------------------------------------------------------
-// Static project data — update titles, descriptions, and tags as needed
-// ---------------------------------------------------------------------------
-const projects = [
-  {
-    id: "1",
-    title: "Kathkuni Restoration Initiative",
-    description:
-      "Documenting and restoring traditional Kathkuni wood-and-stone construction techniques across Chachogi village.",
-    tag: "Ongoing",
-  },
-  {
-    id: "2",
-    title: "Shepherd Volunteer Programme",
-    description:
-      "Work exchange programme connecting skilled volunteers with community-building projects in the Kullu Valley.",
-    tag: "Open",
-  },
-  {
-    id: "3",
-    title: "Mountain Food Archive",
-    description:
-      "Recording and preserving traditional Himachali recipes, seasonal food practices, and indigenous crop knowledge.",
-    tag: "Ongoing",
-  },
-  {
-    id: "4",
-    title: "Village Commons Design",
-    description:
-      "Community-led redesign of shared spaces in Chachogi — courtyards, water points, and gathering areas.",
-    tag: "Planning",
-  },
-  {
-    id: "5",
-    title: "Slow Economy Map",
-    description:
-      "Mapping local artisans, seasonal growers, and traditional crafts in the upper Kullu Valley.",
-    tag: "Completed",
-  },
-  {
-    id: "6",
-    title: "Chachogi School Garden",
-    description:
-      "Establishing a permaculture garden at the local school to teach sustainable growing practices to children.",
-    tag: "Ongoing",
-  },
-];
-
 type Tab = "projects" | "articles";
 
 const tabContentVariants = {
-  initial: { opacity: 0, y: 12 },
+  initial: { opacity: 0, y: 10 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] as const } },
-  exit:    { opacity: 0, y: -8,  transition: { duration: 0.2 } },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.2 } },
 };
 
+function tagColor(tag: string): string {
+  switch (tag) {
+    case "Ongoing":   return "text-[#2C5F2E]";
+    case "Open":      return "text-[#C4752A]";
+    case "Planning":  return "text-[#6B5B93]";
+    case "Completed": return "text-[#4A4A4A]";
+    default:          return "text-muted-foreground";
+  }
+}
+
 const Blogs = () => {
-  const { data: notionArticles, isLoading, isError } = useNotionArticles();
+  const { data: notionArticles, isLoading: articlesLoading, isError: articlesError } = useNotionArticles();
+  const { data: projects = [], isLoading: projectsLoading, isError: projectsError } = useNotionProjects();
   const [activeTab, setActiveTab] = useState<Tab>("projects");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -97,8 +61,9 @@ const Blogs = () => {
     return articles.filter((a) => a.category === selectedCategory);
   }, [articles, selectedCategory]);
 
-  const featuredArticle = filteredArticles[0];
-  const otherArticles = filteredArticles.slice(1);
+  const coverArticle = filteredArticles[0];
+  const midArticles  = filteredArticles.slice(1, 3);
+  const gridArticles = filteredArticles.slice(3);
 
   return (
     <PageTransition>
@@ -106,82 +71,107 @@ const Blogs = () => {
       <main className="bg-background overflow-x-hidden">
         <Navigation variant="magazine" />
 
-        {/* Hero */}
-        <section className="pt-28 pb-10 md:pt-40 md:pb-16 px-5 md:px-12">
-          <div className="max-w-4xl mx-auto">
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: HERO_TIMING.tagline.delay, duration: HERO_TIMING.tagline.duration, ease: EASING }}
-              className="font-sans text-xs tracking-[0.3em] uppercase text-muted-foreground mb-4"
-            >
-              Publications
-            </motion.p>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: HERO_TIMING.heading.delay, duration: HERO_TIMING.heading.duration, ease: EASING }}
-              className="font-serif text-3xl sm:text-4xl md:text-6xl leading-[1.15] mb-6"
-            >
-              Shepherd Magazine
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: HERO_TIMING.description.delay, duration: HERO_TIMING.description.duration, ease: EASING }}
-              className="font-sans text-base text-muted-foreground leading-relaxed max-w-xl"
-            >
-              Observations from 2,300 metres. Stories about Kathkuni architecture,
-              the people of Chachogi, the food that grows here, and the seasons that shape everything.
-            </motion.p>
-          </div>
-        </section>
+        {/* ── MASTHEAD ── */}
+        <header className="pt-28 md:pt-36 px-5 md:px-12">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.55, ease: EASING }}
+              className="h-[3px] bg-foreground origin-left"
+            />
 
-        {/* Tab switcher */}
-        <motion.section
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
+              className="py-2 flex justify-center gap-5 md:gap-10"
+            >
+              {["Architecture", "Food", "Land", "Community", "Volunteering", "Collaboration"].map((topic) => (
+                <span key={topic} className="font-sans text-[9px] md:text-[10px] tracking-[0.28em] uppercase text-muted-foreground">
+                  {topic}
+                </span>
+              ))}
+            </motion.div>
+
+            <div className="h-px bg-border" />
+
+            <motion.h1
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5, ease: EASING }}
+              className="font-serif text-center py-6 md:py-8 text-5xl sm:text-6xl md:text-8xl tracking-tight leading-none"
+            >
+              The Shepherd Magazine
+            </motion.h1>
+
+            <div className="h-px bg-border" />
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.4 }}
+              className="py-2 flex justify-between items-center"
+            >
+              <span className="font-sans text-[9px] md:text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
+                Adaptive Rural Tourism in the Himalayas
+              </span>
+              <span className="font-sans text-[9px] md:text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
+                Chachogi, Naggar, Himachal Pradesh · 2,300 m
+              </span>
+            </motion.div>
+
+            <div className="h-[3px] bg-foreground" />
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.4 }}
+              className="text-center font-serif italic text-sm md:text-base text-muted-foreground py-4"
+            >
+              Observations from 2,300 metres — stories of Kathkuni architecture, mountain food, and the seasons that shape everything.
+            </motion.p>
+
+            <div className="h-px bg-border" />
+          </div>
+        </header>
+
+        {/* ── TAB NAV ── */}
+        <motion.nav
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.4 }}
-          className="px-5 md:px-12 border-b border-border"
+          transition={{ delay: 0.6, duration: 0.4 }}
+          className="px-5 md:px-12"
         >
-          <div className="max-w-6xl mx-auto flex items-end gap-10">
+          <div className="max-w-5xl mx-auto flex items-end gap-10 pt-6">
             <button
               onClick={() => setActiveTab("projects")}
-              className={`relative pb-4 font-sans text-sm tracking-[0.12em] uppercase transition-colors duration-200 ${
-                activeTab === "projects"
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+              className={`relative pb-4 font-sans text-sm tracking-[0.15em] uppercase transition-colors duration-200 ${
+                activeTab === "projects" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Our Projects
               {activeTab === "projects" && (
-                <motion.span
-                  layoutId="tab-underline"
-                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-foreground"
-                />
+                <motion.span layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-[2px] bg-foreground" />
               )}
             </button>
 
             <button
               onClick={() => setActiveTab("articles")}
-              className={`relative pb-4 font-sans text-sm tracking-[0.12em] uppercase transition-colors duration-200 ${
-                activeTab === "articles"
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+              className={`relative pb-4 font-sans text-sm tracking-[0.15em] uppercase transition-colors duration-200 ${
+                activeTab === "articles" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Articles
               {activeTab === "articles" && (
-                <motion.span
-                  layoutId="tab-underline"
-                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-foreground"
-                />
+                <motion.span layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-[2px] bg-foreground" />
               )}
             </button>
           </div>
-        </motion.section>
+          <div className="max-w-5xl mx-auto h-px bg-border" />
+        </motion.nav>
 
-        {/* Tab content */}
+        {/* ── TAB CONTENT ── */}
         <AnimatePresence mode="wait">
 
           {/* ── PROJECTS ── */}
@@ -192,24 +182,135 @@ const Blogs = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="px-5 md:px-12 py-14 md:py-20"
+              className="px-5 md:px-12 py-12 md:py-16"
             >
-              <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-                {projects.map((project, i) => (
-                  <ScrollReveal key={project.id} delay={i * 0.07}>
-                    <div className="border border-border p-6 md:p-8 flex flex-col gap-4 h-full">
-                      <span className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground">
-                        {project.tag}
-                      </span>
-                      <h3 className="font-serif text-xl leading-[1.3]">
-                        {project.title}
-                      </h3>
-                      <p className="font-sans text-sm text-muted-foreground leading-relaxed">
-                        {project.description}
-                      </p>
-                    </div>
-                  </ScrollReveal>
-                ))}
+              <div className="max-w-5xl mx-auto">
+
+                <div className="mb-8">
+                  <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-2">Field Notes</p>
+                  <h2 className="font-serif text-2xl md:text-3xl mb-4">Ongoing Work from Chachogi</h2>
+                  <div className="h-px bg-border" />
+                </div>
+
+                {/* Loading skeleton */}
+                {projectsLoading && (
+                  <div className="animate-pulse divide-y divide-border">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="py-8 grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-4 md:gap-12">
+                        <div className="space-y-3">
+                          <div className="h-2 bg-secondary w-1/4" />
+                          <div className="h-6 bg-secondary w-3/4" />
+                        </div>
+                        <div className="space-y-2">
+                          <div className="h-2 bg-secondary w-full" />
+                          <div className="h-2 bg-secondary w-5/6" />
+                          <div className="h-2 bg-secondary w-4/5" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Error */}
+                {projectsError && !projectsLoading && (
+                  <div className="py-12 border-t border-border">
+                    <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-3">Notice</p>
+                    <p className="font-serif italic text-xl text-muted-foreground">
+                      Field notes are being gathered. Projects will appear shortly.
+                    </p>
+                  </div>
+                )}
+
+                {/* Live project list */}
+                {!projectsLoading && projects.length > 0 && (
+                  <div className="divide-y divide-border">
+                    {projects.map((project, i) => {
+                      const embed = getVideoEmbed(project.video);
+                      return (
+                        <ScrollReveal key={project.id} delay={i * 0.06}>
+                          <div className="py-8 md:py-10">
+
+                            {/* Photo — full width above the row */}
+                            {project.photo && (
+                              <div className="aspect-[21/9] overflow-hidden mb-6">
+                                <img
+                                  src={project.photo}
+                                  alt={project.title}
+                                  className="w-full h-full object-cover"
+                                  loading="lazy"
+                                />
+                              </div>
+                            )}
+
+                            {/* Two-column: tag+title | description+video */}
+                            <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-4 md:gap-12">
+                              <div>
+                                {project.tag && (
+                                  <p className={`font-sans text-[10px] tracking-[0.28em] uppercase mb-2 ${tagColor(project.tag)}`}>
+                                    {project.tag}
+                                  </p>
+                                )}
+                                <h3 className="font-serif text-xl md:text-2xl leading-[1.3]">
+                                  {project.title}
+                                </h3>
+                              </div>
+
+                              <div className="flex flex-col gap-5">
+                                <p className="font-sans text-sm text-muted-foreground leading-relaxed">
+                                  {project.description}
+                                </p>
+
+                                {/* Inline video */}
+                                {embed && (
+                                  <div>
+                                    <div className="flex items-center gap-3 mb-3">
+                                      <div className="h-px flex-1 bg-border" />
+                                      <span className="font-sans text-[9px] tracking-[0.3em] uppercase text-muted-foreground whitespace-nowrap">
+                                        Watch
+                                      </span>
+                                      <div className="h-px flex-1 bg-border" />
+                                    </div>
+                                    <div className="aspect-video">
+                                      {embed.type === "iframe" ? (
+                                        <iframe
+                                          src={embed.src}
+                                          className="w-full h-full"
+                                          allowFullScreen
+                                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                          title={project.title}
+                                        />
+                                      ) : (
+                                        <video
+                                          src={embed.src}
+                                          controls
+                                          className="w-full h-full"
+                                          title={project.title}
+                                        />
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                          </div>
+                        </ScrollReveal>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Empty state */}
+                {!projectsLoading && !projectsError && projects.length === 0 && (
+                  <div className="py-16 border-t border-foreground/20">
+                    <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-4">Coming Soon</p>
+                    <h3 className="font-serif text-2xl leading-[1.3] mb-3">No projects yet.</h3>
+                    <p className="font-sans text-sm text-muted-foreground">
+                      Field notes from Chachogi will appear here soon.
+                    </p>
+                  </div>
+                )}
+
               </div>
             </motion.section>
           )}
@@ -222,19 +323,21 @@ const Blogs = () => {
               initial="initial"
               animate="animate"
               exit="exit"
+              className="px-5 md:px-12"
             >
-              {/* Category filter — only shown when there are articles */}
-              {!isLoading && articles.length > 0 && (
-                <div className="px-5 md:px-12 pt-10 pb-8">
-                  <div className="max-w-6xl mx-auto flex gap-3 flex-wrap">
+
+              {/* Category filter bar */}
+              {!articlesLoading && articles.length > 0 && (
+                <div className="max-w-5xl mx-auto pt-8 pb-6">
+                  <div className="flex gap-6 flex-wrap border-b border-border pb-4">
                     {categories.map((cat) => (
                       <button
                         key={cat}
                         onClick={() => setSelectedCategory(cat)}
-                        className={`font-sans text-xs tracking-[0.1em] uppercase px-4 py-2 border transition-colors ${
+                        className={`font-sans text-[10px] tracking-[0.22em] uppercase pb-1 border-b-2 transition-colors ${
                           selectedCategory === cat
-                            ? "border-foreground text-foreground bg-foreground/5"
-                            : "border-border text-muted-foreground hover:text-foreground hover:border-foreground"
+                            ? "border-foreground text-foreground"
+                            : "border-transparent text-muted-foreground hover:text-foreground"
                         }`}
                       >
                         {cat}
@@ -245,81 +348,113 @@ const Blogs = () => {
               )}
 
               {/* Loading skeleton */}
-              {isLoading && (
-                <div className="px-5 md:px-12 py-16 md:py-20">
-                  <div className="max-w-6xl mx-auto animate-pulse">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-                      <div className="aspect-[16/10] bg-secondary" />
-                      <div className="flex flex-col justify-center space-y-4">
-                        <div className="h-3 bg-secondary w-1/4" />
-                        <div className="h-7 bg-secondary w-3/4" />
-                        <div className="h-3 bg-secondary w-full" />
-                        <div className="h-3 bg-secondary w-2/3" />
-                      </div>
+              {articlesLoading && (
+                <div className="max-w-5xl mx-auto py-16 animate-pulse space-y-10">
+                  <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-10">
+                    <div className="aspect-[16/10] bg-secondary" />
+                    <div className="space-y-4 py-4">
+                      <div className="h-2 bg-secondary w-1/4" />
+                      <div className="h-8 bg-secondary w-3/4" />
+                      <div className="h-2 bg-secondary w-full" />
+                      <div className="h-2 bg-secondary w-2/3" />
                     </div>
                   </div>
-                </div>
-              )}
-
-              {/* Featured article */}
-              {!isLoading && featuredArticle && (
-                <div className="px-5 md:px-12 mb-14 md:mb-20">
-                  <div className="max-w-6xl mx-auto">
-                    <ScrollReveal>
-                      <Link
-                        to={`/shepherd-magazine/${featuredArticle.slug}`}
-                        className="group grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12"
-                      >
-                        <div className="aspect-[16/10] overflow-hidden">
-                          <img
-                            src={getArticleImage(featuredArticle, 0)}
-                            alt={featuredArticle.title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            loading="lazy"
-                          />
-                        </div>
-                        <div className="flex flex-col justify-center">
-                          <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-3">
-                            {featuredArticle.category} · {formatArticleDate(featuredArticle.date)}
-                          </p>
-                          <h2 className="font-serif text-2xl md:text-3xl leading-[1.3] mb-4 group-hover:text-primary transition-colors">
-                            {featuredArticle.title}
-                          </h2>
-                          <p className="font-sans text-sm text-muted-foreground leading-relaxed mb-4">
-                            {featuredArticle.excerpt}
-                          </p>
-                          <p className="font-sans text-xs tracking-[0.15em] uppercase text-muted-foreground">
-                            {featuredArticle.readTime}
-                          </p>
-                        </div>
-                      </Link>
-                    </ScrollReveal>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    {[0, 1].map((i) => (
+                      <div key={i} className="space-y-3">
+                        <div className="aspect-[16/10] bg-secondary" />
+                        <div className="h-2 bg-secondary w-1/3" />
+                        <div className="h-5 bg-secondary w-2/3" />
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
 
-              {/* Article grid */}
-              {!isLoading && otherArticles.length > 0 && (
-                <div className="px-5 md:px-12 pb-16 md:pb-24">
-                  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-                    {otherArticles.map((article, i) => (
+              {/* Error */}
+              {articlesError && !articlesLoading && (
+                <div className="max-w-5xl mx-auto py-16 border-t border-border">
+                  <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-3">Notice</p>
+                  <p className="font-serif italic text-xl text-muted-foreground">
+                    The magazine is being typeset. Articles will appear shortly.
+                  </p>
+                </div>
+              )}
+
+              {/* ── COVER STORY ── */}
+              {!articlesLoading && coverArticle && (
+                <ScrollReveal>
+                  <div className="max-w-5xl mx-auto py-10 border-b border-border">
+                    <div className="mb-6 flex items-center gap-4">
+                      <div className="h-px flex-1 bg-border" />
+                      <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-muted-foreground whitespace-nowrap">
+                        Cover Story
+                      </span>
+                      <div className="h-px flex-1 bg-border" />
+                    </div>
+
+                    <Link
+                      to={`/shepherd-magazine/${coverArticle.slug}`}
+                      className="group grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-8 md:gap-12"
+                    >
+                      <div className="aspect-[4/3] md:aspect-[16/11] overflow-hidden">
+                        <img
+                          src={getArticleImage(coverArticle, 0)}
+                          alt={coverArticle.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                          loading="eager"
+                        />
+                      </div>
+                      <div className="flex flex-col justify-center gap-4">
+                        <p className="font-sans text-[10px] tracking-[0.25em] uppercase text-muted-foreground">
+                          {coverArticle.category}
+                        </p>
+                        <h2 className="font-serif text-3xl md:text-4xl leading-[1.2] group-hover:text-primary transition-colors">
+                          {coverArticle.title}
+                        </h2>
+                        <p className="font-sans text-sm text-muted-foreground leading-relaxed">
+                          {coverArticle.excerpt}
+                        </p>
+                        <div className="flex items-center gap-3 pt-1">
+                          <span className="font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
+                            {formatArticleDate(coverArticle.date)}
+                          </span>
+                          <span className="text-border select-none">·</span>
+                          <span className="font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
+                            {coverArticle.readTime}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                </ScrollReveal>
+              )}
+
+              {/* ── TWO MEDIUM STORIES ── */}
+              {!articlesLoading && midArticles.length > 0 && (
+                <div className="max-w-5xl mx-auto py-10 border-b border-border">
+                  <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
+                    {midArticles.map((article, i) => (
                       <ScrollReveal key={article.id} delay={i * 0.1}>
-                        <Link to={`/shepherd-magazine/${article.slug}`} className="group block">
-                          <div className="aspect-[3/2] overflow-hidden mb-4">
+                        <Link
+                          to={`/shepherd-magazine/${article.slug}`}
+                          className={`group block py-6 md:py-0 ${i === 0 ? "md:pr-10" : "md:pl-10"}`}
+                        >
+                          <div className="aspect-[16/10] overflow-hidden mb-5">
                             <img
                               src={getArticleImage(article, i + 1)}
                               alt={article.title}
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                               loading="lazy"
                             />
                           </div>
-                          <p className="font-sans text-xs tracking-[0.15em] uppercase text-muted-foreground mb-2">
-                            {article.category} · {article.readTime}
+                          <p className="font-sans text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-2">
+                            {article.category} · {formatArticleDate(article.date)}
                           </p>
-                          <h3 className="font-serif text-lg leading-[1.3] mb-2 group-hover:text-primary transition-colors">
+                          <h3 className="font-serif text-xl md:text-2xl leading-[1.3] mb-3 group-hover:text-primary transition-colors">
                             {article.title}
                           </h3>
-                          <p className="font-sans text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                          <p className="font-sans text-sm text-muted-foreground leading-relaxed line-clamp-2">
                             {article.excerpt}
                           </p>
                         </Link>
@@ -329,46 +464,73 @@ const Blogs = () => {
                 </div>
               )}
 
-              {/* Empty state — no articles at all */}
-              {!isLoading && articles.length === 0 && (
-                <div className="px-5 md:px-12 pb-16 md:pb-24">
-                  <div className="max-w-6xl mx-auto border-t border-border pt-16 pb-24">
-                    <p className="font-sans text-xs tracking-[0.3em] uppercase text-muted-foreground mb-5">
-                      Coming Soon
-                    </p>
-                    <h3 className="font-serif text-2xl md:text-3xl leading-[1.3] mb-4 max-w-md">
-                      The first issue is being written.
-                    </h3>
-                    <p className="font-sans text-sm text-muted-foreground leading-relaxed max-w-sm">
-                      Stories about Kathkuni architecture, mountain food, and life at 2,300 metres.
-                      Check back soon.
-                    </p>
+              {/* ── TEXT-DENSE ARCHIVE GRID ── */}
+              {!articlesLoading && gridArticles.length > 0 && (
+                <div className="max-w-5xl mx-auto py-10 pb-24">
+                  <div className="mb-6">
+                    <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-3">From the Archive</p>
+                    <div className="h-px bg-border" />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
+                    {gridArticles.map((article, i) => (
+                      <ScrollReveal key={article.id} delay={i * 0.07}>
+                        <Link
+                          to={`/shepherd-magazine/${article.slug}`}
+                          className={`group block py-6 ${
+                            i % 3 === 0 ? "md:pr-8" : i % 3 === 1 ? "md:px-8" : "md:pl-8"
+                          }`}
+                        >
+                          <p className="font-sans text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-2">
+                            {article.category}
+                          </p>
+                          <h3 className="font-serif text-lg leading-[1.35] mb-3 group-hover:text-primary transition-colors">
+                            {article.title}
+                          </h3>
+                          <p className="font-sans text-xs text-muted-foreground leading-relaxed line-clamp-3 mb-3">
+                            {article.excerpt}
+                          </p>
+                          <p className="font-sans text-[10px] tracking-[0.15em] uppercase text-muted-foreground/60">
+                            {formatArticleDate(article.date)} · {article.readTime}
+                          </p>
+                        </Link>
+                      </ScrollReveal>
+                    ))}
                   </div>
                 </div>
               )}
 
-              {/* Empty state — category filter has no results */}
-              {!isLoading && articles.length > 0 && filteredArticles.length === 0 && (
-                <div className="px-5 md:px-12 pb-16 md:pb-24">
-                  <div className="max-w-6xl mx-auto text-center py-16">
-                    <p className="font-sans text-sm text-muted-foreground mb-4">
-                      No articles in this category yet.
-                    </p>
-                    <button
-                      onClick={() => setSelectedCategory("All")}
-                      className="font-sans text-xs tracking-[0.2em] uppercase border-b border-foreground/30 pb-1 hover:border-foreground transition-all duration-300"
-                    >
-                      View all articles
-                    </button>
-                  </div>
+              {/* Empty — no articles */}
+              {!articlesLoading && articles.length === 0 && !articlesError && (
+                <div className="max-w-5xl mx-auto py-20 border-t border-foreground">
+                  <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-4">Coming Soon</p>
+                  <h3 className="font-serif text-2xl md:text-3xl mb-4 max-w-md leading-[1.3]">
+                    The first issue is being written.
+                  </h3>
+                  <p className="font-sans text-sm text-muted-foreground leading-relaxed max-w-sm">
+                    Stories about Kathkuni architecture, mountain food, and life at 2,300 metres. Check back soon.
+                  </p>
                 </div>
               )}
+
+              {/* Empty — category filter has no results */}
+              {!articlesLoading && articles.length > 0 && filteredArticles.length === 0 && (
+                <div className="max-w-5xl mx-auto py-16 text-center">
+                  <p className="font-sans text-sm text-muted-foreground mb-4">No articles in this category yet.</p>
+                  <button
+                    onClick={() => setSelectedCategory("All")}
+                    className="font-sans text-[10px] tracking-[0.2em] uppercase border-b border-foreground/30 pb-1 hover:border-foreground transition-all"
+                  >
+                    View all articles
+                  </button>
+                </div>
+              )}
+
             </motion.section>
           )}
 
         </AnimatePresence>
 
-        <Footer />
+        <Footer variant="magazine" />
       </main>
     </PageTransition>
   );

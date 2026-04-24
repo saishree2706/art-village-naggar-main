@@ -1,7 +1,8 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
+  { "source": "/api/(.*)", "destination": "/api/$1" },
+  { "source": "/(.*)", "destination": "/index.html" }
+],
   "headers": [
     {
       "source": "/(.*)",
@@ -109,7 +110,7 @@
       ]
     }
   ],
-  "devCommand": "vite --port $PORT",
+  "devCommand": "npm run dev",
   "outputDirectory": "dist",
   "buildCommand": "npm run build"
 }

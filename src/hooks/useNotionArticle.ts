@@ -18,6 +18,7 @@ export interface ArticleContent {
   readTime: string;
   category: string;
   coverImage: string | null;
+  video: string | null;
   content: ContentBlock[];
 }
 

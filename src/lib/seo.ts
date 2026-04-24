@@ -90,7 +90,7 @@ export const routeMetadata: Record<string, PageMeta> = {
   "/shepherd-magazine": {
     title: "Shepherd Magazine | ART - Adaptive Rural Tourism",
     description:
-      "Observations from 2,300 metres. Stories about Kathkuni architecture, village life, seasonal food, and Himalayan traditions.",
+      "Stories about Kathkuni architecture, village life, seasonal food, and Himalayan traditions.",
     ogImage: "/og/magazine.jpg",
     ogImageAlt: "Shepherd Magazine — stories from ART village Naggar",
     ogType: "website",

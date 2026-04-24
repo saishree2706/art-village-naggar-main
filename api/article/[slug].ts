@@ -45,6 +45,7 @@ interface ArticleContent {
   readTime: string;
   category: string;
   coverImage: string | null;
+  video: string | null;
   content: ContentBlock[];
 }
 
@@ -198,6 +199,7 @@ async function getArticleBySlug(slug: string): Promise<ArticleContent | null> {
     readTime: getPropertyValue(properties.ReadTime) || "5 min read",
     category: getPropertyValue(properties.Category) || "General",
     coverImage: getPropertyValue(properties.CoverImage) || page.cover?.external?.url || page.cover?.file?.url || null,
+    video: getPropertyValue(properties.Video) || null,
     content,
   };
 }
