@@ -184,7 +184,7 @@ async function getArticleBySlug(slug: string): Promise<ArticleContent | null> {
   const content: ContentBlock[] = [];
 
   for (const block of blocksResponse.results) {
-    const parsed = parseBlock(block as BlockObjectResponse);
+    const parsed = parseBlock(block);
     if (parsed) {
       content.push(parsed);
     }

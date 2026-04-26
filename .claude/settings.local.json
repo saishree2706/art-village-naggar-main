@@ -33,7 +33,10 @@
       "Bash(set NODE_TLS_REJECT_UNAUTHORIZED=0)",
       "PowerShell(vercel dev *)",
       "Bash(netstat -ano)",
-      "Bash(curl -s http://localhost:3000/api/articles)"
+      "Bash(curl -s http://localhost:3000/api/articles)",
+      "Bash(grep -v \"=\" .env)",
+      "Bash(grep -v \"=\" .env.local)",
+      "Bash(sed 's/=.*//')"
     ]
   }
 }

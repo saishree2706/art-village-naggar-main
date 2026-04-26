@@ -62,9 +62,12 @@ function getPropertyValue(property: any): string {
 }
 
 async function getProjects(): Promise<NotionProject[]> {
+  if (!databaseId) {
+    throw new Error("NOTION_PROJECTS_DATABASE_ID is not set");
+  }
+
   const response = await notion.databases.query({
     database_id: databaseId,
-    sorts: [{ property: "Title", direction: "ascending" }],
   });
 
   return response.results.map((page: any) => {
