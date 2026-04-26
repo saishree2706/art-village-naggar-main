@@ -112,4 +112,5 @@
   "devCommand": "npm run dev",
   "outputDirectory": "dist",
   "buildCommand": "npm run build"
+  
 }
