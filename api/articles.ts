@@ -101,7 +101,7 @@ async function getArticles(): Promise<NotionArticle[]> {
       category: getPropertyValue(properties.Category) || "General",
       coverImage: getPropertyValue(properties.CoverImage) || page.cover?.external?.url || page.cover?.file?.url || null,
       video: getPropertyValue(properties.Video) || null,
-      published: getPropertyValue(properties.Published),
+      published: properties.Published?.checkbox ?? false,
     };
   });
 }
