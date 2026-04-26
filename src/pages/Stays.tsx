@@ -265,6 +265,7 @@ const Stays = () => {
                   <ImageCarousel
                     images={featuredAccommodation.images}
                     alt={featuredAccommodation.name}
+                    variant="fill"
                   />
                 </div>
 
@@ -339,6 +340,7 @@ const Stays = () => {
                       <ImageCarousel
                         images={suite.images}
                         alt={suite.name}
+                        variant="fill"
                       />
                     </div>
 
@@ -400,6 +402,7 @@ const Stays = () => {
                       <ImageCarousel
                         images={room.images}
                         alt={room.name}
+                        variant="fill"
                       />
                     </div>
 

@@ -37,7 +37,9 @@
       "Bash(grep -v \"=\" .env)",
       "Bash(grep -v \"=\" .env.local)",
       "Bash(sed 's/=.*//')",
-      "Bash(del *)"
+      "Bash(del *)",
+      "mcp__filesystem__directory_tree",
+      "mcp__filesystem__list_directory_with_sizes"
     ]
   }
 }
