@@ -249,7 +249,7 @@ const Blogs = () => {
                             </div>
 
                             {/* Clickable title */}
-                            <Link to={`/shepherd-magazine/project/${project.id}`} className="group block">
+                            <Link to={`/shepherd-magazine/project/${project.slug}`} className="group block">
                               <h3 className={`font-serif leading-[1.2] mb-5 group-hover:text-primary transition-colors ${isFeatured ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"}`}>
                                 {project.title}
                               </h3>
@@ -264,7 +264,7 @@ const Blogs = () => {
 
                             {/* Photo — links to detail */}
                             {project.photo && (
-                              <Link to={`/shepherd-magazine/project/${project.id}`} className="group block mb-7">
+                              <Link to={`/shepherd-magazine/project/${project.slug}`} className="group block mb-7">
                                 <div className={`overflow-hidden ${isFeatured ? "aspect-[16/9]" : "aspect-[21/9]"}`}>
                                   <img
                                     src={project.photo}
@@ -278,7 +278,7 @@ const Blogs = () => {
 
                             {/* Read more */}
                             <Link
-                              to={`/shepherd-magazine/project/${project.id}`}
+                              to={`/shepherd-magazine/project/${project.slug}`}
                               className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-7"
                             >
                               Read more <span className="text-xs">→</span>

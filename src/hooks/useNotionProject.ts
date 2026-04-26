@@ -18,8 +18,8 @@ export interface ProjectDetail {
   content: ContentBlock[];
 }
 
-async function fetchProject(id: string): Promise<ProjectDetail> {
-  const response = await fetch(`/api/project/${id}`);
+async function fetchProject(slug: string): Promise<ProjectDetail> {
+  const response = await fetch(`/api/project/${slug}`);
   if (!response.ok) {
     if (response.status === 404) throw new Error("Project not found");
     throw new Error("Failed to fetch project");
@@ -27,11 +27,11 @@ async function fetchProject(id: string): Promise<ProjectDetail> {
   return response.json();
 }
 
-export function useNotionProject(id: string | undefined) {
+export function useNotionProject(slug: string | undefined) {
   return useQuery({
-    queryKey: ["notion-project", id],
-    queryFn: () => fetchProject(id!),
-    enabled: !!id,
+    queryKey: ["notion-project", slug],
+    queryFn: () => fetchProject(slug!),
+    enabled: !!slug,
     staleTime: 5 * 60 * 1000,
     retry: 1,
   });

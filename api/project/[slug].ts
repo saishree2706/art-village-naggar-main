@@ -2,6 +2,7 @@ import { Client } from "@notionhq/client";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
+const databaseId = process.env.NOTION_PROJECTS_DATABASE_ID as string;
 
 const ALLOWED_ORIGINS = [
   "https://artvillagenaggar.com",
@@ -37,6 +38,7 @@ interface ContentBlock {
 
 interface ProjectDetail {
   id: string;
+  slug: string;
   title: string;
   description: string;
   tag: string;
@@ -48,20 +50,15 @@ interface ProjectDetail {
 function getPropertyValue(property: any): string {
   if (!property) return "";
   switch (property.type) {
-    case "title":
-      return property.title?.[0]?.plain_text || "";
-    case "rich_text":
-      return property.rich_text?.map((t: any) => t.plain_text).join("") || "";
-    case "select":
-      return property.select?.name || "";
-    case "url":
-      return property.url || "";
+    case "title":   return property.title?.[0]?.plain_text || "";
+    case "rich_text": return property.rich_text?.map((t: any) => t.plain_text).join("") || "";
+    case "select":  return property.select?.name || "";
+    case "url":     return property.url || "";
     case "files":
       if (property.files?.[0]?.type === "external") return property.files[0].external.url;
-      if (property.files?.[0]?.type === "file") return property.files[0].file.url;
+      if (property.files?.[0]?.type === "file")     return property.files[0].file.url;
       return "";
-    default:
-      return "";
+    default: return "";
   }
 }
 
@@ -98,21 +95,36 @@ function parseBlock(block: any): ContentBlock | null {
       return { type: "image", content: "", url, caption: getRichText(img?.caption) };
     }
     case "code":
-      return { type: "code", content: getRichText(block.code?.rich_text), language: block.code?.language || "plaintext" };
+      return {
+        type: "code",
+        content: getRichText(block.code?.rich_text),
+        language: block.code?.language || "plaintext",
+      };
     default:
       return null;
   }
 }
 
-async function getProjectById(id: string): Promise<ProjectDetail | null> {
-  const page = await notion.pages.retrieve({ page_id: id }) as any;
+async function getProjectBySlug(slug: string): Promise<ProjectDetail | null> {
+  const response = await notion.databases.query({
+    database_id: databaseId,
+    filter: {
+      property: "Slug",
+      rich_text: { equals: slug },
+    },
+  });
+
+  if (response.results.length === 0) return null;
+
+  const page = response.results[0] as any;
   const props = page.properties;
 
-  const blocksResponse = await notion.blocks.children.list({ block_id: id, page_size: 100 });
+  const blocksResponse = await notion.blocks.children.list({ block_id: page.id, page_size: 100 });
   const content = blocksResponse.results.map(parseBlock).filter(Boolean) as ContentBlock[];
 
   return {
     id: page.id,
+    slug: getPropertyValue(props.Slug) || page.id,
     title: getPropertyValue(props.Title),
     description: getPropertyValue(props.description),
     tag: getPropertyValue(props.tag) || "",
@@ -147,11 +159,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
 
-  const { id } = req.query;
-  if (!id || typeof id !== "string") return res.status(400).json({ error: "ID is required" });
+  const { slug } = req.query;
+  if (!slug || typeof slug !== "string") return res.status(400).json({ error: "Slug is required" });
 
   try {
-    const project = await getProjectById(id);
+    const project = await getProjectBySlug(slug);
     if (!project) return res.status(404).json({ error: "Project not found" });
 
     const cacheHeader = process.env.VERCEL_ENV === "production"

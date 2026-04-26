@@ -62,7 +62,7 @@ const AnimatedRoutes = () => {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/experiences" element={<Experiences />} />
           <Route path="/shepherd-magazine" element={<Blogs />} />
-          <Route path="/shepherd-magazine/project/:id" element={<ProjectDetail />} />
+          <Route path="/shepherd-magazine/project/:slug" element={<ProjectDetail />} />
           <Route path="/shepherd-magazine/:slug" element={<BlogPost />} />
           {/* Redirects for old blog URLs */}
           <Route path="/blogs" element={<Navigate to="/shepherd-magazine" replace />} />

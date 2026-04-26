@@ -102,8 +102,8 @@ function renderBlock(block: ContentBlock, index: number) {
 }
 
 const ProjectDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const { data: project, isLoading, isError, error } = useNotionProject(id);
+  const { slug } = useParams<{ slug: string }>();
+  const { data: project, isLoading, isError, error } = useNotionProject(slug);
 
   if (isLoading) {
     return (

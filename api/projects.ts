@@ -33,6 +33,7 @@ function checkRateLimit(ip: string): { allowed: boolean; remaining: number; rese
 
 export interface NotionProject {
   id: string;
+  slug: string;
   title: string;
   description: string;
   tag: string;
@@ -74,6 +75,7 @@ async function getProjects(): Promise<NotionProject[]> {
     const props = page.properties;
     return {
       id: page.id,
+      slug: getPropertyValue(props.Slug) || page.id,
       title: getPropertyValue(props.Title),
       description: getPropertyValue(props.description),
       tag: getPropertyValue(props.tag) || "",
