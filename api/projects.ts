@@ -117,7 +117,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const projects = await getProjects();
-    res.setHeader("Cache-Control", "s-maxage=300, stale-while-revalidate");
+    const cacheHeader = process.env.VERCEL_ENV === "production"
+      ? "s-maxage=300, stale-while-revalidate"
+      : "no-store";
+    res.setHeader("Cache-Control", cacheHeader);
     return res.status(200).json(projects);
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {

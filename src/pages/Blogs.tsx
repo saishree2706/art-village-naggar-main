@@ -223,75 +223,85 @@ const Blogs = () => {
 
                 {/* Live project list */}
                 {!projectsLoading && projects.length > 0 && (
-                  <div className="divide-y divide-border">
+                  <div>
                     {projects.map((project, i) => {
                       const embed = getVideoEmbed(project.video);
-                      return (
-                        <ScrollReveal key={project.id} delay={i * 0.06}>
-                          <div className="py-8 md:py-10">
+                      const issueNo = String(i + 1).padStart(2, "0");
+                      const isFeatured = i === 0;
 
-                            {/* Photo — full width above the row */}
+                      return (
+                        <ScrollReveal key={project.id} delay={i * 0.07}>
+                          <div className={`py-10 md:py-14 border-b border-border ${isFeatured ? "pb-12 md:pb-16" : ""}`}>
+
+                            {/* Issue number + tag row */}
+                            <div className="flex items-center gap-4 mb-4">
+                              <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-muted-foreground/50">
+                                No. {issueNo}
+                              </span>
+                              {project.tag && (
+                                <>
+                                  <span className="text-border select-none text-xs">·</span>
+                                  <span className={`font-sans text-[9px] tracking-[0.3em] uppercase ${tagColor(project.tag)}`}>
+                                    {project.tag}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+
+                            {/* Title */}
+                            <h3 className={`font-serif leading-[1.2] mb-5 ${isFeatured ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"}`}>
+                              {project.title}
+                            </h3>
+
+                            {/* Description */}
+                            {project.description && (
+                              <p className={`font-sans text-muted-foreground leading-relaxed mb-7 ${isFeatured ? "text-base max-w-2xl" : "text-sm max-w-xl"}`}>
+                                {project.description}
+                              </p>
+                            )}
+
+                            {/* Photo */}
                             {project.photo && (
-                              <div className="aspect-[21/9] overflow-hidden mb-6">
+                              <div className={`overflow-hidden mb-7 ${isFeatured ? "aspect-[16/9]" : "aspect-[21/9]"}`}>
                                 <img
                                   src={project.photo}
                                   alt={project.title}
                                   className="w-full h-full object-cover"
-                                  loading="lazy"
+                                  loading={isFeatured ? "eager" : "lazy"}
                                 />
                               </div>
                             )}
 
-                            {/* Two-column: tag+title | description+video */}
-                            <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-4 md:gap-12">
+                            {/* Video */}
+                            {embed && (
                               <div>
-                                {project.tag && (
-                                  <p className={`font-sans text-[10px] tracking-[0.28em] uppercase mb-2 ${tagColor(project.tag)}`}>
-                                    {project.tag}
-                                  </p>
-                                )}
-                                <h3 className="font-serif text-xl md:text-2xl leading-[1.3]">
-                                  {project.title}
-                                </h3>
+                                <div className="flex items-center gap-4 mb-4">
+                                  <div className="h-px flex-1 bg-border" />
+                                  <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-muted-foreground whitespace-nowrap">
+                                    Watch
+                                  </span>
+                                  <div className="h-px flex-1 bg-border" />
+                                </div>
+                                <div className="aspect-video">
+                                  {embed.type === "iframe" ? (
+                                    <iframe
+                                      src={embed.src}
+                                      className="w-full h-full"
+                                      allowFullScreen
+                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                      title={project.title}
+                                    />
+                                  ) : (
+                                    <video
+                                      src={embed.src}
+                                      controls
+                                      className="w-full h-full"
+                                      title={project.title}
+                                    />
+                                  )}
+                                </div>
                               </div>
-
-                              <div className="flex flex-col gap-5">
-                                <p className="font-sans text-sm text-muted-foreground leading-relaxed">
-                                  {project.description}
-                                </p>
-
-                                {/* Inline video */}
-                                {embed && (
-                                  <div>
-                                    <div className="flex items-center gap-3 mb-3">
-                                      <div className="h-px flex-1 bg-border" />
-                                      <span className="font-sans text-[9px] tracking-[0.3em] uppercase text-muted-foreground whitespace-nowrap">
-                                        Watch
-                                      </span>
-                                      <div className="h-px flex-1 bg-border" />
-                                    </div>
-                                    <div className="aspect-video">
-                                      {embed.type === "iframe" ? (
-                                        <iframe
-                                          src={embed.src}
-                                          className="w-full h-full"
-                                          allowFullScreen
-                                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                          title={project.title}
-                                        />
-                                      ) : (
-                                        <video
-                                          src={embed.src}
-                                          controls
-                                          className="w-full h-full"
-                                          title={project.title}
-                                        />
-                                      )}
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
+                            )}
 
                           </div>
                         </ScrollReveal>
