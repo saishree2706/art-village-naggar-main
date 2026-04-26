@@ -23,6 +23,7 @@ const ShepherdHostel = lazy(() => import("./pages/ShepherdHostel"));
 const Collaborate = lazy(() => import("./pages/Collaborate"));
 const Terms = lazy(() => import("./pages/Terms"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Privacy = lazy(() => import("./pages/Privacy"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 
 // Redirect component for blog post slugs
@@ -70,6 +71,7 @@ const AnimatedRoutes = () => {
           <Route path="/collaborate" element={<Collaborate />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

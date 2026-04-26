@@ -176,7 +176,7 @@ const BlogPost = () => {
               </p>
               <div className="h-[3px] bg-foreground mb-8" />
               <Link
-                to="/shepherd-magazine"
+                to="/shepherd-magazine?tab=articles"
                 className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
@@ -237,7 +237,7 @@ const BlogPost = () => {
               transition={{ duration: 0.4, ease: EASING }}
             >
               <Link
-                to="/shepherd-magazine"
+                to="/shepherd-magazine?tab=articles"
                 className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-6"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
@@ -367,7 +367,7 @@ const BlogPost = () => {
             {/* Editorial back link */}
             <div className="mt-16 pt-6 border-t-[3px] border-foreground">
               <Link
-                to="/shepherd-magazine"
+                to="/shepherd-magazine?tab=articles"
                 className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />

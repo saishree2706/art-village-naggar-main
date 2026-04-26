@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -7,7 +7,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import PageTransition from "@/components/PageTransition";
 import SEO from "@/components/SEO";
 import { EASING } from "@/lib/animations";
-import { getVideoEmbed } from "@/lib/utils";
+
 import { useNotionArticles, fallbackArticles, formatArticleDate, type Article } from "@/hooks/useNotionArticles";
 import { useNotionProjects } from "@/hooks/useNotionProjects";
 
@@ -44,9 +44,12 @@ function tagColor(tag: string): string {
 }
 
 const Blogs = () => {
+  const [searchParams] = useSearchParams();
   const { data: notionArticles, isLoading: articlesLoading, isError: articlesError } = useNotionArticles();
   const { data: projects = [], isLoading: projectsLoading, isError: projectsError } = useNotionProjects();
-  const [activeTab, setActiveTab] = useState<Tab>("projects");
+  const [activeTab, setActiveTab] = useState<Tab>(
+    (searchParams.get("tab") as Tab) === "articles" ? "articles" : "projects"
+  );
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const articles = notionArticles && notionArticles.length > 0 ? notionArticles : fallbackArticles;
@@ -194,18 +197,14 @@ const Blogs = () => {
 
                 {/* Loading skeleton */}
                 {projectsLoading && (
-                  <div className="animate-pulse divide-y divide-border">
-                    {[1, 2, 3].map((i) => (
-                      <div key={i} className="py-8 grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-4 md:gap-12">
-                        <div className="space-y-3">
-                          <div className="h-2 bg-secondary w-1/4" />
-                          <div className="h-6 bg-secondary w-3/4" />
-                        </div>
-                        <div className="space-y-2">
-                          <div className="h-2 bg-secondary w-full" />
-                          <div className="h-2 bg-secondary w-5/6" />
-                          <div className="h-2 bg-secondary w-4/5" />
-                        </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 animate-pulse">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                      <div key={i}>
+                        <div className="aspect-[4/3] bg-secondary mb-4" />
+                        <div className="h-2 bg-secondary w-1/3 mb-3" />
+                        <div className="h-5 bg-secondary w-3/4 mb-3" />
+                        <div className="h-2 bg-secondary w-full mb-2" />
+                        <div className="h-2 bg-secondary w-5/6" />
                       </div>
                     ))}
                   </div>
@@ -221,104 +220,48 @@ const Blogs = () => {
                   </div>
                 )}
 
-                {/* Live project list */}
+                {/* Card grid */}
                 {!projectsLoading && projects.length > 0 && (
-                  <div>
-                    {projects.map((project, i) => {
-                      const embed = getVideoEmbed(project.video);
-                      const issueNo = String(i + 1).padStart(2, "0");
-                      const isFeatured = i === 0;
-
-                      return (
-                        <ScrollReveal key={project.id} delay={i * 0.07}>
-                          <div className={`py-10 md:py-14 border-b border-border ${isFeatured ? "pb-12 md:pb-16" : ""}`}>
-
-                            {/* Issue number + tag row */}
-                            <div className="flex items-center gap-4 mb-4">
-                              <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-muted-foreground/50">
-                                No. {issueNo}
-                              </span>
-                              {project.tag && (
-                                <>
-                                  <span className="text-border select-none text-xs">·</span>
-                                  <span className={`font-sans text-[9px] tracking-[0.3em] uppercase ${tagColor(project.tag)}`}>
-                                    {project.tag}
-                                  </span>
-                                </>
-                              )}
-                            </div>
-
-                            {/* Clickable title */}
-                            <Link to={`/shepherd-magazine/project/${project.slug}`} className="group block">
-                              <h3 className={`font-serif leading-[1.2] mb-5 group-hover:text-primary transition-colors ${isFeatured ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"}`}>
-                                {project.title}
-                              </h3>
-                            </Link>
-
-                            {/* Description */}
-                            {project.description && (
-                              <p className={`font-sans text-muted-foreground leading-relaxed mb-7 ${isFeatured ? "text-base max-w-2xl" : "text-sm max-w-xl"}`}>
-                                {project.description}
-                              </p>
-                            )}
-
-                            {/* Photo — links to detail */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    {projects.map((project, i) => (
+                      <ScrollReveal key={project.id} delay={i * 0.07}>
+                        <Link
+                          to={`/shepherd-magazine/project/${project.slug}`}
+                          className="group block"
+                        >
+                          {/* Photo */}
+                          <div className="aspect-[4/3] overflow-hidden mb-4 bg-secondary">
                             {project.photo && (
-                              <Link to={`/shepherd-magazine/project/${project.slug}`} className="group block mb-7">
-                                <div className={`overflow-hidden ${isFeatured ? "aspect-[16/9]" : "aspect-[21/9]"}`}>
-                                  <img
-                                    src={project.photo}
-                                    alt={project.title}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                                    loading={isFeatured ? "eager" : "lazy"}
-                                  />
-                                </div>
-                              </Link>
+                              <img
+                                src={project.photo}
+                                alt={project.title}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                                loading={i < 3 ? "eager" : "lazy"}
+                              />
                             )}
-
-                            {/* Read more */}
-                            <Link
-                              to={`/shepherd-magazine/project/${project.slug}`}
-                              className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-7"
-                            >
-                              Read more <span className="text-xs">→</span>
-                            </Link>
-
-                            {/* Video */}
-                            {embed && (
-                              <div>
-                                <div className="flex items-center gap-4 mb-4">
-                                  <div className="h-px flex-1 bg-border" />
-                                  <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-muted-foreground whitespace-nowrap">
-                                    Watch
-                                  </span>
-                                  <div className="h-px flex-1 bg-border" />
-                                </div>
-                                <div className="aspect-video">
-                                  {embed.type === "iframe" ? (
-                                    <iframe
-                                      src={embed.src}
-                                      className="w-full h-full"
-                                      allowFullScreen
-                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                      title={project.title}
-                                    />
-                                  ) : (
-                                    <video
-                                      src={embed.src}
-                                      controls
-                                      className="w-full h-full"
-                                      title={project.title}
-                                    />
-                                  )}
-                                </div>
-                              </div>
-                            )}
-
                           </div>
-                        </ScrollReveal>
-                      );
-                    })}
+
+                          {/* Tag */}
+                          {project.tag && (
+                            <p className={`font-sans text-[9px] tracking-[0.3em] uppercase mb-2 ${tagColor(project.tag)}`}>
+                              {project.tag}
+                            </p>
+                          )}
+
+                          {/* Title */}
+                          <h3 className="font-serif text-xl leading-[1.25] mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                            {project.title}
+                          </h3>
+
+                          {/* Description */}
+                          {project.description && (
+                            <p className="font-sans text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                              {project.description}
+                            </p>
+                          )}
+                        </Link>
+                      </ScrollReveal>
+                    ))}
                   </div>
                 )}
 

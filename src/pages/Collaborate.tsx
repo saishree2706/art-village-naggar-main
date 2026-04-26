@@ -117,7 +117,7 @@ The team of volunteers will be accommodated in our in-house dorm. Hence, the tea
                       <ExternalLink className="w-3 h-3" />
                     </a>
                     <Link
-                      to="/shepherd-magazine"
+                      to="/shepherd-magazine?tab=projects"
                       className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.15em] uppercase border border-foreground/20 px-6 py-3 hover:bg-foreground hover:text-background transition-all duration-300"
                     >
                       Life as a Shepherd
@@ -190,7 +190,7 @@ The team of volunteers will be accommodated in our in-house dorm. Hence, the tea
                       <ExternalLink className="w-3 h-3" />
                     </a>
                     <Link
-                      to="/shepherd-magazine"
+                      to="/shepherd-magazine?tab=articles"
                       className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.15em] uppercase border border-foreground/20 px-6 py-3 hover:bg-foreground hover:text-background transition-all duration-300"
                     >
                       View Publications

@@ -1,109 +1,52 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { EASING } from "@/lib/animations";
 
-interface ImageCarouselProps {
-  images: string[];
-  alt: string;
+export interface CarouselImage {
+  url: string;
+  caption?: string;
 }
 
-const ImageCarousel = ({ images, alt }: ImageCarouselProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+export function ImageCarousel({ images }: { images: CarouselImage[] }) {
+  const [current, setCurrent] = useState(0);
 
-  // Preload adjacent images
-  useEffect(() => {
-    if (images.length <= 1) return;
-
-    const preloadImage = (src: string) => {
-      const img = new Image();
-      img.src = src;
-    };
-
-    // Preload next and previous images
-    const nextIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
-    const prevIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
-
-    preloadImage(images[nextIndex]);
-    preloadImage(images[prevIndex]);
-  }, [currentIndex, images]);
-
-  const goToPrevious = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsLoaded(false);
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-
-  const goToNext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsLoaded(false);
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
-
-  if (images.length === 0) return null;
+  const prev = () => setCurrent((c) => (c === 0 ? images.length - 1 : c - 1));
+  const next = () => setCurrent((c) => (c === images.length - 1 ? 0 : c + 1));
 
   return (
-    <div className="relative aspect-[4/3] overflow-hidden group bg-secondary/30">
-      <AnimatePresence mode="wait">
-        <motion.img
-          key={currentIndex}
-          src={images[currentIndex]}
-          alt={`${alt} - Image ${currentIndex + 1}`}
+    <figure className="my-12 -mx-4 md:-mx-12">
+      <div className="relative overflow-hidden aspect-[4/3]">
+        <img
+          src={images[current].url}
+          alt={images[current].caption || ""}
           className="w-full h-full object-cover"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isLoaded ? 1 : 0 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: EASING }}
-          onLoad={() => setIsLoaded(true)}
           loading="lazy"
         />
-      </AnimatePresence>
 
-      {images.length > 1 && (
-        <>
-          {/* Navigation Arrows */}
-          <button
-            onClick={goToPrevious}
-            className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 md:w-8 md:h-8 bg-background/80 hover:bg-background rounded-full flex items-center justify-center opacity-70 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-            aria-label="Previous image"
-          >
-            <ChevronLeft className="w-5 h-5 md:w-4 md:h-4" />
-          </button>
-          <button
-            onClick={goToNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 md:w-8 md:h-8 bg-background/80 hover:bg-background rounded-full flex items-center justify-center opacity-70 md:opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-            aria-label="Next image"
-          >
-            <ChevronRight className="w-5 h-5 md:w-4 md:h-4" />
-          </button>
+        <button
+          onClick={prev}
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-background/80 hover:bg-background text-foreground transition-colors"
+          aria-label="Previous image"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          onClick={next}
+          className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-background/80 hover:bg-background text-foreground transition-colors"
+          aria-label="Next image"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
 
-          {/* Dots Indicator */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-            {images.map((_, index) => (
-              <button
-                key={index}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setIsLoaded(false);
-                  setCurrentIndex(index);
-                }}
-                className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                  index === currentIndex
-                    ? "bg-background w-4"
-                    : "bg-background/50 hover:bg-background/70"
-                }`}
-                aria-label={`Go to image ${index + 1}`}
-              />
-            ))}
-          </div>
-        </>
+        <span className="absolute bottom-3 right-3 bg-background/70 font-sans text-[10px] tracking-widest px-2 py-1">
+          {current + 1} / {images.length}
+        </span>
+      </div>
+
+      {images[current].caption && (
+        <figcaption className="font-sans text-xs text-muted-foreground mt-3 text-center tracking-[0.1em]">
+          {images[current].caption}
+        </figcaption>
       )}
-    </div>
+    </figure>
   );
-};
-
-export default ImageCarousel;
+}

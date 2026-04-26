@@ -8,6 +8,8 @@ import PageTransition from "@/components/PageTransition";
 import { EASING } from "@/lib/animations";
 import { getVideoEmbed } from "@/lib/utils";
 import { useNotionProject, type ContentBlock } from "@/hooks/useNotionProject";
+import { ImageCarousel } from "@/components/ImageCarousel";
+import { groupContentBlocks, type CarouselBlock } from "@/lib/content";
 
 function tagColor(tag: string): string {
   switch (tag) {
@@ -147,7 +149,7 @@ const ProjectDetail = () => {
               </p>
               <div className="h-[3px] bg-foreground mb-8" />
               <Link
-                to="/shepherd-magazine"
+                to="/shepherd-magazine?tab=projects"
                 className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
@@ -178,7 +180,7 @@ const ProjectDetail = () => {
               transition={{ duration: 0.4, ease: EASING }}
             >
               <Link
-                to="/shepherd-magazine"
+                to="/shepherd-magazine?tab=projects"
                 className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-6"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
@@ -254,9 +256,25 @@ const ProjectDetail = () => {
           </section>
         )}
 
-        {/* ── VIDEO ── */}
+        {/* ── CONTENT BLOCKS ── */}
+        {project.content.length > 0 && (
+          <section className="px-5 md:px-12">
+            <div className="max-w-2xl mx-auto">
+              <ScrollReveal>
+                {groupContentBlocks(project.content).map((block, index) => {
+                  if (block.type === "image_carousel") {
+                    return <ImageCarousel key={index} images={(block as CarouselBlock).images} />;
+                  }
+                  return renderBlock(block as ContentBlock, index);
+                })}
+              </ScrollReveal>
+            </div>
+          </section>
+        )}
+
+        {/* ── VIDEO ── (after content) */}
         {videoEmbed && (
-          <section className="px-5 md:px-8 mb-10 md:mb-14">
+          <section className="px-5 md:px-8 mt-10 md:mt-14 mb-4 md:mb-6">
             <ScrollReveal>
               <div className="max-w-4xl mx-auto">
                 <div className="flex items-center gap-4 mb-4">
@@ -284,41 +302,18 @@ const ProjectDetail = () => {
           </section>
         )}
 
-        {/* ── CONTENT BLOCKS ── */}
-        {project.content.length > 0 && (
-          <section className="px-5 md:px-12 pb-16 md:pb-28">
-            <div className="max-w-2xl mx-auto">
-              <ScrollReveal>
-                {project.content.map((block, index) => renderBlock(block, index))}
-              </ScrollReveal>
-
-              <div className="mt-16 pt-6 border-t-[3px] border-foreground">
-                <Link
-                  to="/shepherd-magazine"
-                  className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" />
-                  Return to The Shepherd
-                </Link>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Back link when no content blocks */}
-        {project.content.length === 0 && (
-          <section className="px-5 md:px-12 pb-16 md:pb-28">
-            <div className="max-w-2xl mx-auto mt-10 pt-6 border-t-[3px] border-foreground">
-              <Link
-                to="/shepherd-magazine"
-                className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                Return to The Shepherd
-              </Link>
-            </div>
-          </section>
-        )}
+        {/* ── BACK LINK ── */}
+        <section className="px-5 md:px-12 pb-16 md:pb-28">
+          <div className="max-w-2xl mx-auto mt-10 pt-6 border-t-[3px] border-foreground">
+            <Link
+              to="/shepherd-magazine?tab=projects"
+              className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              Return to The Shepherd
+            </Link>
+          </div>
+        </section>
 
         <Footer variant="magazine" />
       </main>

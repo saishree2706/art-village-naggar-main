@@ -155,6 +155,7 @@ const Footer = ({ variant }: FooterProps = {}) => {
                     <Link to="/story" className="font-sans text-sm text-background/70 hover:text-background transition-colors">Our Story</Link>
                     <Link to="/collaborate" className="font-sans text-sm text-background/70 hover:text-background transition-colors">Collaborate</Link>
                     <Link to="/terms" className="font-sans text-sm text-background/70 hover:text-background transition-colors">Terms & Conditions</Link>
+                    <Link to="/privacy" className="font-sans text-sm text-background/70 hover:text-background transition-colors">Privacy Policy</Link>
                   </div>
                 </div>
               </div>
