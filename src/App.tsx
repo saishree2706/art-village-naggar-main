@@ -23,6 +23,7 @@ const ShepherdHostel = lazy(() => import("./pages/ShepherdHostel"));
 const Collaborate = lazy(() => import("./pages/Collaborate"));
 const Terms = lazy(() => import("./pages/Terms"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 
 // Redirect component for blog post slugs
 const BlogPostRedirect = () => {
@@ -61,6 +62,7 @@ const AnimatedRoutes = () => {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/experiences" element={<Experiences />} />
           <Route path="/shepherd-magazine" element={<Blogs />} />
+          <Route path="/shepherd-magazine/project/:id" element={<ProjectDetail />} />
           <Route path="/shepherd-magazine/:slug" element={<BlogPost />} />
           {/* Redirects for old blog URLs */}
           <Route path="/blogs" element={<Navigate to="/shepherd-magazine" replace />} />

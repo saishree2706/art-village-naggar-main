@@ -248,10 +248,12 @@ const Blogs = () => {
                               )}
                             </div>
 
-                            {/* Title */}
-                            <h3 className={`font-serif leading-[1.2] mb-5 ${isFeatured ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"}`}>
-                              {project.title}
-                            </h3>
+                            {/* Clickable title */}
+                            <Link to={`/shepherd-magazine/project/${project.id}`} className="group block">
+                              <h3 className={`font-serif leading-[1.2] mb-5 group-hover:text-primary transition-colors ${isFeatured ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl"}`}>
+                                {project.title}
+                              </h3>
+                            </Link>
 
                             {/* Description */}
                             {project.description && (
@@ -260,17 +262,27 @@ const Blogs = () => {
                               </p>
                             )}
 
-                            {/* Photo */}
+                            {/* Photo — links to detail */}
                             {project.photo && (
-                              <div className={`overflow-hidden mb-7 ${isFeatured ? "aspect-[16/9]" : "aspect-[21/9]"}`}>
-                                <img
-                                  src={project.photo}
-                                  alt={project.title}
-                                  className="w-full h-full object-cover"
-                                  loading={isFeatured ? "eager" : "lazy"}
-                                />
-                              </div>
+                              <Link to={`/shepherd-magazine/project/${project.id}`} className="group block mb-7">
+                                <div className={`overflow-hidden ${isFeatured ? "aspect-[16/9]" : "aspect-[21/9]"}`}>
+                                  <img
+                                    src={project.photo}
+                                    alt={project.title}
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+                                    loading={isFeatured ? "eager" : "lazy"}
+                                  />
+                                </div>
+                              </Link>
                             )}
+
+                            {/* Read more */}
+                            <Link
+                              to={`/shepherd-magazine/project/${project.id}`}
+                              className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-7"
+                            >
+                              Read more <span className="text-xs">→</span>
+                            </Link>
 
                             {/* Video */}
                             {embed && (
