@@ -50,3 +50,5 @@ export function ImageCarousel({ images }: { images: CarouselImage[] }) {
     </figure>
   );
 }
+
+export default ImageCarousel;
