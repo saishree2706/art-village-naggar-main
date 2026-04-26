@@ -13,8 +13,8 @@ export function ImageCarousel({ images }: { images: CarouselImage[] }) {
   const next = () => setCurrent((c) => (c === images.length - 1 ? 0 : c + 1));
 
   return (
-    <figure className="my-12 -mx-4 md:-mx-12">
-      <div className="relative overflow-hidden aspect-[4/3]">
+    <figure className="my-16 -mx-5 md:-mx-20 lg:-mx-32">
+      <div className="relative overflow-hidden aspect-[16/9]">
         <img
           src={images[current].url}
           alt={images[current].caption || ""}
@@ -43,7 +43,7 @@ export function ImageCarousel({ images }: { images: CarouselImage[] }) {
       </div>
 
       {images[current].caption && (
-        <figcaption className="font-sans text-xs text-muted-foreground mt-3 text-center tracking-[0.1em]">
+        <figcaption className="font-sans text-xs text-muted-foreground mt-3 text-center tracking-[0.1em] px-5 md:px-20 lg:px-32">
           {images[current].caption}
         </figcaption>
       )}

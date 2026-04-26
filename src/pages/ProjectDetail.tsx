@@ -83,10 +83,10 @@ function renderBlock(block: ContentBlock, index: number) {
       );
     case "image":
       return (
-        <figure key={index} className="my-12 -mx-4 md:-mx-12">
+        <figure key={index} className="my-16 -mx-5 md:-mx-20 lg:-mx-32">
           <img src={block.url} alt={block.caption || ""} className="w-full object-cover" loading="lazy" />
           {block.caption && (
-            <figcaption className="font-sans text-xs text-muted-foreground mt-3 text-center tracking-[0.1em]">
+            <figcaption className="font-sans text-xs text-muted-foreground mt-3 text-center tracking-[0.1em] px-5 md:px-20 lg:px-32">
               {block.caption}
             </figcaption>
           )}
@@ -212,7 +212,7 @@ const ProjectDetail = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.5, ease: EASING }}
-              className="font-serif text-3xl sm:text-4xl md:text-5xl leading-[1.15] mb-6"
+              className="font-serif text-4xl sm:text-5xl md:text-6xl leading-[1.1] mb-6"
             >
               {project.title}
             </motion.h1>
@@ -238,19 +238,17 @@ const ProjectDetail = () => {
           </div>
         </header>
 
-        {/* ── COVER PHOTO ── */}
+        {/* ── COVER PHOTO ── full bleed */}
         {project.photo && (
-          <section className="px-5 md:px-8 my-10 md:my-14">
+          <section className="my-10 md:my-14">
             <ScrollReveal>
-              <div className="max-w-5xl mx-auto">
-                <div className="aspect-[16/9] overflow-hidden">
-                  <img
-                    src={project.photo}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                    loading="eager"
-                  />
-                </div>
+              <div className="aspect-[16/9] overflow-hidden">
+                <img
+                  src={project.photo}
+                  alt={project.title}
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                />
               </div>
             </ScrollReveal>
           </section>
