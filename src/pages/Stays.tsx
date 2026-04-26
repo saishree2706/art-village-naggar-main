@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { X } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -108,10 +110,103 @@ const atticRooms = [
   },
 ];
 
+const mandatoryNotices = [
+  {
+    heading: "Remote Location",
+    text: "The property is located in Chachogi village, accessible via a 4 km steep dirt track from Naggar. Road conditions can vary seasonally.",
+  },
+  {
+    heading: "Health Advisory",
+    text: "We do not recommend this property for guests with critical health conditions or situations requiring easy emergency access to hospitals or highways.",
+  },
+  {
+    heading: "Cancellation",
+    text: "Bookings are refundable if cancelled 14 days before check-in. No waiver is provided for road-access difficulties — cancellation charges apply unless we are unable to safely shuttle you ourselves.",
+  },
+  {
+    heading: "Check-in",
+    text: "Check-in is at 2 PM, check-out at 12 PM. We do not provide assistance during closed hours (11 PM – 6 AM).",
+  },
+];
+
 const Stays = () => {
+  const [modalOpen, setModalOpen] = useState(true);
+
   return (
     <PageTransition>
       <SEO />
+
+      {/* ── MANDATORY READ MODAL ── */}
+      {modalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
+          <div className="relative bg-background border border-foreground/20 w-full max-w-md max-h-[88vh] overflow-y-auto shadow-2xl">
+            <div className="p-7 md:p-10">
+
+              {/* Close button */}
+              <button
+                onClick={() => setModalOpen(false)}
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <div className="h-[3px] bg-foreground mb-6" />
+
+              <p className="font-sans text-[9px] tracking-[0.3em] uppercase text-muted-foreground mb-3">
+                Mandatory Read
+              </p>
+              <h2 className="font-serif text-2xl md:text-3xl leading-[1.2] mb-8">
+                Before You Book
+              </h2>
+
+              <div className="space-y-6 mb-8">
+                {mandatoryNotices.map((notice) => (
+                  <div key={notice.heading} className="border-l-[2px] border-foreground/20 pl-4">
+                    <p className="font-sans text-[10px] tracking-[0.2em] uppercase text-foreground mb-1">
+                      {notice.heading}
+                    </p>
+                    <p className="font-sans text-sm text-muted-foreground leading-relaxed">
+                      {notice.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="h-px bg-border mb-6" />
+
+              <p className="font-sans text-xs text-muted-foreground leading-relaxed mb-6">
+                By exploring and booking our stays you agree to our{" "}
+                <Link
+                  to="/terms"
+                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                  onClick={() => setModalOpen(false)}
+                >
+                  Terms & Conditions
+                </Link>{" "}
+                and{" "}
+                <Link
+                  to="/privacy"
+                  className="underline underline-offset-2 hover:text-foreground transition-colors"
+                  onClick={() => setModalOpen(false)}
+                >
+                  Privacy Policy
+                </Link>
+                .
+              </p>
+
+              <button
+                onClick={() => setModalOpen(false)}
+                className="w-full font-sans text-xs tracking-[0.2em] uppercase bg-foreground text-background py-3 hover:bg-foreground/80 transition-colors"
+              >
+                I Understand, Continue
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
+
       <AccommodationSchema
         name="ART - Heritage Accommodation"
         description="Heritage rooms in a 100-year-old Kathkuni house. Duplex suites with hot tubs, cozy attic rooms, and full villa rental."
@@ -124,7 +219,7 @@ const Stays = () => {
           { name: "Stays", url: `${SITE_URL}/stays` },
         ]}
       />
-      <main className="bg-background overflow-x-hidden">
+      <main className={`bg-background overflow-x-hidden transition-opacity duration-300 ${modalOpen ? "opacity-30 pointer-events-none select-none" : ""}`}>
         <Navigation />
 
         {/* Hero Section */}
