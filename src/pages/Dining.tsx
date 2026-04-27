@@ -14,6 +14,16 @@ import { EASING, HERO_TIMING } from "@/lib/animations";
 import dining1 from "@/assets/dining/dining 1.avif";
 import dining2 from "@/assets/dining/dining 2.avif";
 import dining4 from "@/assets/dining/dining 4.avif";
+// Food images
+import foodTrout from "@/assets/Food/Trout Fish.jpg";
+import foodSiddu from "@/assets/Food/Siddu.jpg";
+import foodLingad from "@/assets/Food/Lingad ki Sabji.jpg";
+import foodKhichdi from "@/assets/Food/Khichidi.jpg";
+import foodBread from "@/assets/Food/Bread.jpeg";
+import foodPadThai from "@/assets/Food/Pad Thai Noodles.jpg";
+import foodRajma from "@/assets/Food/Rajma Chawal.jpg";
+import foodPasta from "@/assets/Food/White Sauce Pasta.jpg";
+import foodPoha from "@/assets/Food/Indore Poha.jpg";
 
 const cuisineTypes = [
   {
@@ -31,12 +41,15 @@ const cuisineTypes = [
 ];
 
 const menuHighlights = [
-  { name: "Freshly Grilled Trout", description: "From the Beas river, prepared over wood fire" },
-  { name: "Wood-Fired Pizzas", description: "Made with local vegetables and house-made dough" },
-  { name: "Ghee Siddu", description: "Traditional steamed bread with walnut-poppy seed filling" },
-  { name: "Lingri Vegetables", description: "Foraged fern shoots in seasonal preparation" },
-  { name: "Local Rice Khichri", description: "Comfort food made with mountain-grown rice and lentils" },
-  { name: "Fresh Baked Bread", description: "Daily bread from our wood-fired oven" },
+  { name: "Freshly Grilled Trout", description: "From the Beas river, prepared over wood fire", image: foodTrout },
+  { name: "Ghee Siddu", description: "Traditional steamed bread with walnut-poppy seed filling", image: foodSiddu },
+  { name: "Lingad ki Sabji", description: "Foraged fern shoots in seasonal preparation", image: foodLingad },
+  { name: "Local Rice Khichdi", description: "Comfort food made with mountain-grown rice and lentils", image: foodKhichdi },
+  { name: "Fresh Baked Bread", description: "Daily bread from our wood-fired oven", image: foodBread },
+  { name: "Pad Thai Noodles", description: "Rice noodles tossed with mountain vegetables and house tamarind sauce", image: foodPadThai },
+  { name: "Rajma Chawal", description: "Slow-cooked red kidney beans with mountain-grown rice", image: foodRajma },
+  { name: "White Sauce Pasta", description: "Creamy pasta with seasonal vegetables and fresh herbs", image: foodPasta },
+  { name: "Indore Poha", description: "Flattened rice with roasted peanuts, mustard, and fresh coriander", image: foodPoha },
 ];
 
 const Dining = () => {
@@ -181,53 +194,46 @@ const Dining = () => {
         {/* Menu Highlights */}
         <section className="py-14 md:py-24 px-5 md:px-12 bg-secondary/50">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
-              <div>
-                <ScrollReveal>
-                  <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
-                    Signature Offerings
-                  </p>
-                  <h2 className="font-serif text-3xl md:text-4xl mb-8 leading-[1.3]">
-                    From our kitchen.
-                  </h2>
+            <ScrollReveal>
+              <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
+                Signature Offerings
+              </p>
+              <h2 className="font-serif text-3xl md:text-4xl mb-10 md:mb-16 leading-[1.3]">
+                From our kitchen.
+              </h2>
+            </ScrollReveal>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+              {menuHighlights.map((item, i) => (
+                <ScrollReveal key={item.name} delay={i * 0.06}>
+                  <div>
+                    <div className="aspect-[4/5] overflow-hidden mb-3">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.04]"
+                        loading="lazy"
+                      />
+                    </div>
+                    <h3 className="font-serif text-base md:text-lg leading-[1.2] mb-1">{item.name}</h3>
+                    <p className="font-sans text-xs text-muted-foreground leading-relaxed">{item.description}</p>
+                  </div>
                 </ScrollReveal>
-
-                <div className="space-y-6">
-                  {menuHighlights.map((item, i) => (
-                    <ScrollReveal key={item.name} delay={i * 0.1}>
-                      <div className="border-b border-border/50 pb-4">
-                        <h3 className="font-serif text-lg mb-1">{item.name}</h3>
-                        <p className="font-sans text-sm text-muted-foreground">
-                          {item.description}
-                        </p>
-                      </div>
-                    </ScrollReveal>
-                  ))}
-                </div>
-
-                <ScrollReveal delay={0.5}>
-                  <a
-                    href="https://art12.ola.click/products"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 mt-8 font-sans text-xs tracking-[0.2em] uppercase border-b border-foreground/30 pb-1 hover:border-foreground transition-all duration-500"
-                  >
-                    View Full Menu <ExternalLink className="w-3 h-3" />
-                  </a>
-                </ScrollReveal>
-              </div>
-
-              <ScrollReveal delay={0.2}>
-                <div className="aspect-[3/4] overflow-hidden md:mt-16">
-                  <img
-                    src={dining4}
-                    alt="Seasonal produce from the mountain"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-              </ScrollReveal>
+              ))}
             </div>
+
+            <ScrollReveal delay={0.3}>
+              <div className="mt-10 md:mt-14">
+                <a
+                  href="https://art12.ola.click/products"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 font-sans text-xs tracking-[0.2em] uppercase border-b border-foreground/30 pb-1 hover:border-foreground transition-all duration-500"
+                >
+                  View Full Menu <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            </ScrollReveal>
           </div>
         </section>
 
