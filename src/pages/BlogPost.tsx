@@ -193,6 +193,9 @@ const BlogPost = () => {
   }
 
   const coverImage = article.coverImage || DEFAULT_COVER;
+  const heroPhotos = (article.photos && article.photos.length > 0)
+    ? article.photos
+    : [coverImage];
   const articleUrl = `${SITE_URL}/shepherd-magazine/${article.slug}`;
   const videoEmbed = getVideoEmbed(article.video ?? null);
   const groupedBlocks = groupContentBlocks(article.content);
@@ -307,19 +310,29 @@ const BlogPost = () => {
           </div>
         </header>
 
-        {/* ── COVER IMAGE ── full bleed */}
-        <section className="my-10 md:my-14">
-          <ScrollReveal>
-            <div className="aspect-[16/9] overflow-hidden">
-              <img
-                src={coverImage}
-                alt={article.title}
-                className="w-full h-full object-cover"
-                loading="eager"
-              />
+        {/* ── COVER MEDIA ── constrained, single image or carousel */}
+        {heroPhotos.length > 0 && (
+          <section className="px-5 md:px-12 my-10 md:my-14">
+            <div className="max-w-5xl mx-auto">
+              <ScrollReveal>
+                {heroPhotos.length === 1 ? (
+                  <div className="aspect-[16/9] overflow-hidden bg-foreground/5 rounded-sm shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)]">
+                    <img
+                      src={heroPhotos[0]}
+                      alt={article.title}
+                      className="w-full h-full object-cover"
+                      loading="eager"
+                    />
+                  </div>
+                ) : (
+                  <div className="aspect-[16/9] overflow-hidden bg-foreground/5 rounded-sm shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)]">
+                    <ImageCarousel images={heroPhotos} alt={article.title} variant="fill" />
+                  </div>
+                )}
+              </ScrollReveal>
             </div>
-          </ScrollReveal>
-        </section>
+          </section>
+        )}
 
         {/* ── INLINE VIDEO (if present) ── */}
         {videoEmbed && (

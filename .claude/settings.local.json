@@ -39,7 +39,18 @@
       "Bash(sed 's/=.*//')",
       "Bash(del *)",
       "mcp__filesystem__directory_tree",
-      "mcp__filesystem__list_directory_with_sizes"
+      "mcp__filesystem__list_directory_with_sizes",
+      "Bash(curl -s -o NUL -w \"HTTP %{http_code}\\\\n\" http://localhost:8080/api/articles)",
+      "Bash(curl -s http://localhost:8080/api/articles)",
+      "Bash(curl -s -o NUL -w \"projects: HTTP %{http_code}\\\\n\" http://localhost:8080/api/projects)",
+      "Bash(curl -s http://localhost:8080/api/projects)",
+      "Bash(curl *)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const o=JSON.parse\\(d\\);console.log\\('article:',o.title\\);console.log\\('coverImage:',o.coverImage?.slice\\(0,80\\)\\);console.log\\('photos.length:',o.photos?.length\\);console.log\\('photos:',\\(o.photos||[]\\).map\\(p=>p.slice\\(0,80\\)\\)\\);}\\)\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const o=JSON.parse\\(d\\);console.log\\('project:',o.title\\);console.log\\('photo:',o.photo?.slice\\(0,80\\)\\);console.log\\('photos.length:',o.photos?.length\\);console.log\\('photos:',\\(o.photos||[]\\).map\\(p=>p.slice\\(0,80\\)\\)\\);}\\)\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const o=JSON.parse\\(d\\);console.log\\('coverImage value:',JSON.stringify\\(o.coverImage\\)\\);console.log\\('photos value:',JSON.stringify\\(o.photos\\)\\);}\\)\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const o=JSON.parse\\(d\\);o.forEach\\(a=>console.log\\(a.slug,'->',a.coverImage?'HAS COVER':'no cover'\\)\\);}\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(node *)"
     ]
   }
 }

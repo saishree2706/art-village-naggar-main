@@ -45,6 +45,7 @@ interface ArticleContent {
   readTime: string;
   category: string;
   coverImage: string | null;
+  photos: string[];
   video: string | null;
   content: ContentBlock[];
 }
@@ -90,6 +91,41 @@ function getPropertyValue(property: any): string {
 function getRichText(richText: any[]): string {
   if (!richText) return "";
   return richText.map((t: any) => t.plain_text).join("");
+}
+
+function getPropertyImages(property: any): string[] {
+  if (!property) return [];
+  if (property.type === "files" && Array.isArray(property.files)) {
+    return property.files
+      .map((f: any) => {
+        if (f?.type === "external") return f.external?.url ?? null;
+        if (f?.type === "file") return f.file?.url ?? null;
+        return null;
+      })
+      .filter((u: string | null): u is string => Boolean(u));
+  }
+  if (property.type === "url" && property.url) return [property.url];
+  return [];
+}
+
+function collectImages(properties: any, names: string[]): string[] {
+  // Prefer files-type properties first (multi-photo support).
+  for (const name of names) {
+    const prop = properties[name];
+    if (prop?.type === "files") {
+      const imgs = getPropertyImages(prop);
+      if (imgs.length > 0) return imgs;
+    }
+  }
+  // Fall back to URL-type properties (single photo).
+  for (const name of names) {
+    const prop = properties[name];
+    if (prop?.type === "url") {
+      const imgs = getPropertyImages(prop);
+      if (imgs.length > 0) return imgs;
+    }
+  }
+  return [];
 }
 
 function parseBlock(block: any): ContentBlock | null {
@@ -190,6 +226,20 @@ async function getArticleBySlug(slug: string): Promise<ArticleContent | null> {
     }
   }
 
+  // Canonical property name: "photos" (files type, multi-image).
+  // Fallbacks kept for resilience to capitalisation / legacy naming.
+  const propertyPhotos = collectImages(properties, [
+    "photos", "Photos", "photo", "Photo",
+    "CoverImage", "Cover Image", "Cover", "coverImage", "cover",
+    "Images", "images", "Image", "image",
+  ]);
+  const pageCover = page.cover?.external?.url || page.cover?.file?.url || null;
+  const photos = propertyPhotos.length > 0
+    ? propertyPhotos
+    : pageCover
+      ? [pageCover]
+      : [];
+
   return {
     id: page.id,
     slug: getPropertyValue(properties.Slug) || page.id,
@@ -198,7 +248,8 @@ async function getArticleBySlug(slug: string): Promise<ArticleContent | null> {
     date: getPropertyValue(properties.Date),
     readTime: getPropertyValue(properties.ReadTime) || "5 min read",
     category: getPropertyValue(properties.Category) || "General",
-    coverImage: getPropertyValue(properties.CoverImage) || page.cover?.external?.url || page.cover?.file?.url || null,
+    coverImage: photos[0] ?? null,
+    photos,
     video: getPropertyValue(properties.Video) || null,
     content,
   };
