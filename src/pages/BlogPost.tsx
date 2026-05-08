@@ -11,6 +11,8 @@ import { SITE_URL } from "@/lib/seo";
 import { EASING } from "@/lib/animations";
 import { getVideoEmbed } from "@/lib/utils";
 import { useNotionArticle, formatArticleDate, type ContentBlock } from "@/hooks/useNotionArticle";
+import { ImageCarousel } from "@/components/ImageCarousel";
+import { groupContentBlocks, type CarouselBlock } from "@/lib/content";
 
 const DEFAULT_COVER = "/og/magazine.jpg";
 
@@ -193,7 +195,8 @@ const BlogPost = () => {
   const coverImage = article.coverImage || DEFAULT_COVER;
   const articleUrl = `${SITE_URL}/shepherd-magazine/${article.slug}`;
   const videoEmbed = getVideoEmbed(article.video ?? null);
-  const firstParaIndex = article.content.findIndex((b) => b.type === "paragraph");
+  const groupedBlocks = groupContentBlocks(article.content);
+  const firstParaIndex = groupedBlocks.findIndex((b) => b.type === "paragraph");
 
   return (
     <PageTransition>
@@ -357,9 +360,12 @@ const BlogPost = () => {
         <section className="px-5 md:px-12 pb-16 md:pb-28">
           <div className="max-w-2xl mx-auto">
             <ScrollReveal>
-              {article.content.map((block, index) =>
-                renderBlock(block, index, index === firstParaIndex)
-              )}
+              {groupedBlocks.map((block, index) => {
+                if (block.type === "image_carousel") {
+                  return <ImageCarousel key={index} images={(block as CarouselBlock).images} />;
+                }
+                return renderBlock(block as ContentBlock, index, index === firstParaIndex);
+              })}
             </ScrollReveal>
 
             {/* Editorial back link */}

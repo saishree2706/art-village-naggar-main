@@ -72,14 +72,17 @@ const Navigation = ({ variant = "default" }: NavigationProps) => {
           </Link>
 
           {variant === "magazine" ? (
-            <span className={`
-              absolute left-1/2 -translate-x-1/2
-              font-serif text-xl tracking-wide font-medium
-              transition-colors duration-300
-              ${textColorClass}
-            `}>
+            <Link
+              to="/shepherd-magazine"
+              className={`
+                absolute left-1/2 -translate-x-1/2
+                font-serif text-xl tracking-wide font-medium
+                transition-colors duration-300 hover:opacity-70
+                ${textColorClass}
+              `}
+            >
               Shepherd Magazine
-            </span>
+            </Link>
           ) : (
             <>
               <span className={`
