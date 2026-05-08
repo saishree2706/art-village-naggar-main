@@ -14,6 +14,7 @@ export interface ProjectDetail {
   description: string;
   tag: string;
   photo: string | null;
+  photos: string[];
   video: string | null;
   content: ContentBlock[];
 }

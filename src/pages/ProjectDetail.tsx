@@ -164,6 +164,11 @@ const ProjectDetail = () => {
   }
 
   const videoEmbed = getVideoEmbed(project.video ?? null);
+  const heroPhotos = (project.photos && project.photos.length > 0)
+    ? project.photos
+    : project.photo
+      ? [project.photo]
+      : [];
 
   return (
     <PageTransition>
@@ -238,19 +243,27 @@ const ProjectDetail = () => {
           </div>
         </header>
 
-        {/* ── COVER PHOTO ── full bleed */}
-        {project.photo && (
-          <section className="my-10 md:my-14">
-            <ScrollReveal>
-              <div className="aspect-[16/9] overflow-hidden">
-                <img
-                  src={project.photo}
-                  alt={project.title}
-                  className="w-full h-full object-cover"
-                  loading="eager"
-                />
-              </div>
-            </ScrollReveal>
+        {/* ── COVER MEDIA ── constrained, single image or carousel */}
+        {heroPhotos.length > 0 && (
+          <section className="px-5 md:px-12 my-10 md:my-14">
+            <div className="max-w-5xl mx-auto">
+              <ScrollReveal>
+                {heroPhotos.length === 1 ? (
+                  <div className="aspect-[16/9] overflow-hidden bg-foreground/5 rounded-sm shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)]">
+                    <img
+                      src={heroPhotos[0]}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                      loading="eager"
+                    />
+                  </div>
+                ) : (
+                  <div className="aspect-[16/9] overflow-hidden bg-foreground/5 rounded-sm shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)]">
+                    <ImageCarousel images={heroPhotos} alt={project.title} variant="fill" />
+                  </div>
+                )}
+              </ScrollReveal>
+            </div>
           </section>
         )}
 

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export interface Project {
   id: string;
+  slug: string;
   title: string;
   description: string;
   tag: string;

@@ -62,6 +62,22 @@ function getPropertyValue(property: any): string {
   }
 }
 
+function getFirstImage(properties: any, names: string[]): string {
+  for (const name of names) {
+    const prop = properties[name];
+    if (prop?.type === "files") {
+      const f = prop.files?.[0];
+      if (f?.type === "external" && f.external?.url) return f.external.url;
+      if (f?.type === "file" && f.file?.url) return f.file.url;
+    }
+  }
+  for (const name of names) {
+    const prop = properties[name];
+    if (prop?.type === "url" && prop.url) return prop.url;
+  }
+  return "";
+}
+
 async function getProjects(): Promise<NotionProject[]> {
   if (!databaseId) {
     throw new Error("NOTION_PROJECTS_DATABASE_ID is not set");
@@ -73,6 +89,11 @@ async function getProjects(): Promise<NotionProject[]> {
 
   return response.results.map((page: any) => {
     const props = page.properties;
+    const firstPhoto = getFirstImage(props, [
+      "photos", "Photos", "photo", "Photo",
+      "CoverImage", "Cover Image", "Cover", "coverImage", "cover",
+      "Images", "images", "Image", "image",
+    ]);
     return {
       id: page.id,
       slug: getPropertyValue(props.Slug) || page.id,
@@ -80,7 +101,7 @@ async function getProjects(): Promise<NotionProject[]> {
       description: getPropertyValue(props.description),
       tag: getPropertyValue(props.tag) || "",
       photo:
-        getPropertyValue(props.photo) ||
+        firstPhoto ||
         page.cover?.external?.url ||
         page.cover?.file?.url ||
         null,

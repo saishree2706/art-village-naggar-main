@@ -71,6 +71,22 @@ function getPropertyValue(property: any): string {
   }
 }
 
+function getFirstImage(properties: any, names: string[]): string {
+  for (const name of names) {
+    const prop = properties[name];
+    if (prop?.type === "files") {
+      const f = prop.files?.[0];
+      if (f?.type === "external" && f.external?.url) return f.external.url;
+      if (f?.type === "file" && f.file?.url) return f.file.url;
+    }
+  }
+  for (const name of names) {
+    const prop = properties[name];
+    if (prop?.type === "url" && prop.url) return prop.url;
+  }
+  return "";
+}
+
 async function getArticles(): Promise<NotionArticle[]> {
   const response = await notion.databases.query({
     database_id: databaseId,
@@ -90,6 +106,11 @@ async function getArticles(): Promise<NotionArticle[]> {
 
   return response.results.map((page: any) => {
     const properties = page.properties;
+    const firstPhoto = getFirstImage(properties, [
+      "photos", "Photos", "photo", "Photo",
+      "CoverImage", "Cover Image", "Cover", "coverImage", "cover",
+      "Images", "images", "Image", "image",
+    ]);
 
     return {
       id: page.id,
@@ -99,7 +120,7 @@ async function getArticles(): Promise<NotionArticle[]> {
       date: getPropertyValue(properties.Date),
       readTime: getPropertyValue(properties.ReadTime) || "5 min read",
       category: getPropertyValue(properties.Category) || "General",
-      coverImage: getPropertyValue(properties.CoverImage) || page.cover?.external?.url || page.cover?.file?.url || null,
+      coverImage: firstPhoto || page.cover?.external?.url || page.cover?.file?.url || null,
       video: getPropertyValue(properties.Video) || null,
       published: properties.Published?.checkbox ?? false,
     };
