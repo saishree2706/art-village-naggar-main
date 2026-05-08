@@ -90,7 +90,7 @@ const Blogs = () => {
               transition={{ delay: 0.2, duration: 0.4 }}
               className="py-2 flex justify-center gap-5 md:gap-10"
             >
-              {["Architecture", "Food", "Land", "Community", "Volunteering", "Collaboration"].map((topic) => (
+              {["Architecture", "Community", "Collaboration", "Environment"].map((topic) => (
                 <span key={topic} className="font-sans text-[9px] md:text-[10px] tracking-[0.28em] uppercase text-muted-foreground">
                   {topic}
                 </span>
