@@ -15,7 +15,7 @@ import expHikes from "@/assets/experiences/20180311-_DSC0492.jpg";
 import expStargazing from "@/assets/experiences/20190109-_DSC0741.jpg";
 import expForest from "@/assets/experiences/IMG_20180918_165742.jpg";
 import expCrafts from "@/assets/experiences/IMG_1378.jpg";
-import expOutdoorCook from "@/assets/experiences/fire-stove.jpg";
+import expOutdoorCook from "@/assets/experiences/outdoor_cooking.jpg";
 import expGameNight from "@/assets/experiences/experience-foraging.webp";
 const expDanceNight = expCultural;
 
@@ -126,13 +126,13 @@ const experiences: Experience[] = [
     image: expOutdoorCook,
   },
   {
-    title: "Game Night at the Village",
+    title: "Game Night",
     category: "Evening",
     tagline: "Old games, easy laughter",
     description:
-      "Carrom, chess, ludo, and local card games passed around with chai and pakoras. Easy evenings where strangers become friends.",
+      "Local card games passed around with chai and pakoras. Easy evenings where strangers become friends.",
     highlights: [
-      "Carrom, chess, ludo and card games",
+      "Card games",
       "Hot chai and homemade snacks",
       "Open to all ages",
     ],
