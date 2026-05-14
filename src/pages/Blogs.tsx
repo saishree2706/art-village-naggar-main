@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import PageTransition from "@/components/PageTransition";
 import SEO from "@/components/SEO";
+import InstagramFeed from "@/components/InstagramFeed";
 import { EASING } from "@/lib/animations";
 
 import { useNotionArticles, fallbackArticles, formatArticleDate, type Article } from "@/hooks/useNotionArticles";
@@ -64,9 +65,23 @@ const Blogs = () => {
     return articles.filter((a) => a.category === selectedCategory);
   }, [articles, selectedCategory]);
 
+  // PREVIEW_LIMIT constants control how many items show on the main magazine page
+  // before the rest overflows into /shepherd-magazine/archive.
+  const PROJECTS_PREVIEW_LIMIT = 9;
+  const ARTICLES_ARCHIVE_PREVIEW = 6;
+
   const coverArticle = filteredArticles[0];
-  const midArticles  = filteredArticles.slice(1, 3);
-  const gridArticles = filteredArticles.slice(3);
+  const midArticles = filteredArticles.slice(1, 3);
+  const gridArticles = filteredArticles.slice(3, 3 + ARTICLES_ARCHIVE_PREVIEW);
+  const previewProjects = projects.slice(0, PROJECTS_PREVIEW_LIMIT);
+
+  // Archive link mirrors the active tab + any category filter so context carries over.
+  const archiveHref = (() => {
+    if (activeTab === "projects") return "/shepherd-magazine/archive?tab=projects";
+    const params = new URLSearchParams({ tab: "articles" });
+    if (selectedCategory !== "All") params.set("category", selectedCategory);
+    return `/shepherd-magazine/archive?${params.toString()}`;
+  })();
 
   return (
     <PageTransition>
@@ -146,7 +161,7 @@ const Blogs = () => {
           transition={{ delay: 0.6, duration: 0.4 }}
           className="px-5 md:px-12"
         >
-          <div className="max-w-5xl mx-auto flex items-end gap-10 pt-6">
+          <div className="max-w-5xl mx-auto flex flex-wrap items-end gap-x-8 md:gap-x-10 gap-y-3 pt-6">
             <button
               onClick={() => setActiveTab("projects")}
               className={`relative pb-4 font-sans text-sm tracking-[0.15em] uppercase transition-colors duration-200 ${
@@ -170,6 +185,14 @@ const Blogs = () => {
                 <motion.span layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-[2px] bg-foreground" />
               )}
             </button>
+
+            <Link
+              to={archiveHref}
+              className="ml-auto pb-4 font-sans text-xs tracking-[0.22em] uppercase text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2"
+            >
+              The Archive
+              <span aria-hidden>→</span>
+            </Link>
           </div>
           <div className="max-w-5xl mx-auto h-px bg-border" />
         </motion.nav>
@@ -221,9 +244,9 @@ const Blogs = () => {
                 )}
 
                 {/* Card grid */}
-                {!projectsLoading && projects.length > 0 && (
+                {!projectsLoading && previewProjects.length > 0 && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                    {projects.map((project, i) => (
+                    {previewProjects.map((project, i) => (
                       <ScrollReveal key={project.id} delay={i * 0.07}>
                         <Link
                           to={`/shepherd-magazine/project/${project.slug}`}
@@ -431,7 +454,7 @@ const Blogs = () => {
 
               {/* ── TEXT-DENSE ARCHIVE GRID ── */}
               {!articlesLoading && gridArticles.length > 0 && (
-                <div className="max-w-5xl mx-auto py-10 pb-24">
+                <div className="max-w-5xl mx-auto py-10 pb-16">
                   <div className="mb-6">
                     <p className="font-sans text-[10px] tracking-[0.3em] uppercase text-muted-foreground mb-3">From the Archive</p>
                     <div className="h-px bg-border" />
@@ -494,6 +517,8 @@ const Blogs = () => {
           )}
 
         </AnimatePresence>
+
+        <InstagramFeed />
 
         <Footer variant="magazine" />
       </main>

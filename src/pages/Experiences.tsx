@@ -16,8 +16,8 @@ import expStargazing from "@/assets/experiences/20190109-_DSC0741.jpg";
 import expForest from "@/assets/experiences/IMG_20180918_165742.jpg";
 import expCrafts from "@/assets/experiences/IMG_1378.jpg";
 import expOutdoorCook from "@/assets/experiences/outdoor_cooking.jpg";
-import expGameNight from "@/assets/experiences/experience-foraging.webp";
-const expDanceNight = expCultural;
+import expGameNight from "@/assets/experiences/game_night.jpg";
+import expDanceNight from "@/assets/experiences/dance_night.jpg";
 
 const WHATSAPP_ENQUIRE_URL =
   "https://wa.me/919816650400?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20the%20Art%20Village%20Experience%20Package";
@@ -143,11 +143,11 @@ const experiences: Experience[] = [
     category: "Evening",
     tagline: "Naati rhythms and mountain music",
     description:
-      "Join a Naati circle and let the dhol carry the night. Guests and villagers dancing together until the courtyard quiets down.",
+      "Join a Naati circle and let the dhol carry the night. Dancing together until the courtyard quiets down.",
     highlights: [
       "Traditional Naati and folk dance",
-      "Live dhol and acoustic music",
-      "Courtyard bonfire and warm lights",
+      "Himachali Music",
+      "Bonfire and warm lights",
     ],
     image: expDanceNight,
   },

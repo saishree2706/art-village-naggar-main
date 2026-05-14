@@ -25,6 +25,7 @@ const Terms = lazy(() => import("./pages/Terms"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
+const Archive = lazy(() => import("./pages/Archive"));
 
 // Redirect component for blog post slugs
 const BlogPostRedirect = () => {
@@ -63,6 +64,7 @@ const AnimatedRoutes = () => {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/experiences" element={<Experiences />} />
           <Route path="/shepherd-magazine" element={<Blogs />} />
+          <Route path="/shepherd-magazine/archive" element={<Archive />} />
           <Route path="/shepherd-magazine/project/:slug" element={<ProjectDetail />} />
           <Route path="/shepherd-magazine/:slug" element={<BlogPost />} />
           {/* Redirects for old blog URLs */}
