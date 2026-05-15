@@ -50,7 +50,9 @@
       "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const o=JSON.parse\\(d\\);console.log\\('coverImage value:',JSON.stringify\\(o.coverImage\\)\\);console.log\\('photos value:',JSON.stringify\\(o.photos\\)\\);}\\)\")",
       "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const o=JSON.parse\\(d\\);o.forEach\\(a=>console.log\\(a.slug,'->',a.coverImage?'HAS COVER':'no cover'\\)\\);}\\)\")",
       "Bash(node -e ' *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(git ls-files *)",
+      "Bash(rm tracked_assets.tmp.txt)"
     ]
   }
 }
