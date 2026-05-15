@@ -11,7 +11,7 @@ import { EASING, HERO_TIMING } from "@/lib/animations";
 // Experience images
 import expCultural from "@/assets/experiences/20260220-P1034047.jpg";
 import expCooking from "@/assets/experiences/pizza.jpg";
-import expHikes from "@/assets/experiences/cover_img.jpg";
+import cover_photo from "@/assets/experiences/cover_image.jpg";
 import expStargazing from "@/assets/experiences/20190109-_DSC0741.jpg";
 import expForest from "@/assets/experiences/IMG_20180918_165742.jpg";
 import expCrafts from "@/assets/experiences/IMG_1378.jpg";
@@ -190,7 +190,7 @@ const Experiences = () => {
             className="absolute inset-0"
           >
             <img
-              src={expHikes}
+              src={cover_photo}
               alt="Snowline trek above Naggar village"
               className="w-full h-full object-cover"
             />
@@ -222,7 +222,7 @@ const Experiences = () => {
                 transition={{ delay: HERO_TIMING.heading.delay, duration: HERO_TIMING.heading.duration, ease: EASING }}
                 className="font-serif text-5xl sm:text-6xl md:text-8xl text-background font-normal leading-[1.02] tracking-tight"
               >
-                Nine ways to{" "}
+                Ten ways to{" "}
                 <em className="italic font-light">slow down</em>.
               </motion.h1>
               <motion.p
