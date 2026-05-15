@@ -11,13 +11,15 @@ import { EASING, HERO_TIMING } from "@/lib/animations";
 // Experience images
 import expCultural from "@/assets/experiences/20260220-P1034047.jpg";
 import expCooking from "@/assets/experiences/pizza.jpg";
-import expHikes from "@/assets/experiences/20180311-_DSC0492.jpg";
+import expHikes from "@/assets/experiences/cover_img.jpg";
 import expStargazing from "@/assets/experiences/20190109-_DSC0741.jpg";
 import expForest from "@/assets/experiences/IMG_20180918_165742.jpg";
 import expCrafts from "@/assets/experiences/IMG_1378.jpg";
 import expOutdoorCook from "@/assets/experiences/outdoor_cooking.jpg";
-import expGameNight from "@/assets/experiences/game_night.jpg";
+import expGameNight from "@/assets/experiences/game_night.jpeg";
 import expDanceNight from "@/assets/experiences/dance_night.jpg";
+import snowPhoto from "@/assets/experiences/snowline_trek.jpg";
+import traditionalDanceNight from "@/assets/experiences/traditionalAttire.jpg";
 
 const WHATSAPP_ENQUIRE_URL =
   "https://wa.me/919816650400?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20the%20Art%20Village%20Experience%20Package";
@@ -71,7 +73,7 @@ const experiences: Experience[] = [
       "Alpine meadow exploration",
       "Expert local guides",
     ],
-    image: expHikes,
+    image: snowPhoto,
   },
   {
     title: "Stargazing & Night Camping",
@@ -143,11 +145,24 @@ const experiences: Experience[] = [
     category: "Evening",
     tagline: "Naati rhythms and mountain music",
     description:
-      "Join a Naati circle and let the dhol carry the night. Dancing together until the courtyard quiets down.",
+      "Join a Naati circle and let the music carry the night. Dancing together until the courtyard quiets down.",
     highlights: [
-      "Traditional Naati and folk dance",
-      "Himachali Music",
-      "Bonfire and warm lights",
+      "Naati and folk dance",
+      "Traditional attire",
+      "Live acoustic and folk music performances",
+    ],
+    image: traditionalDanceNight,
+  },
+  {
+    title: "Bon Fire Storytelling & Music",
+    category: "Evening",
+    tagline: "Where mountain stories meet the warmth of the fire",
+    description:
+      "As the night settles over the valley, gather around the glowing bonfire for soulful folk music, timeless local stories, and heartfelt conversations under the stars.",
+    highlights: [
+      "Open storytelling",
+      "Ancient tales and folklore from the Himalayas",
+      "Singing and sharing around the fire",
     ],
     image: expDanceNight,
   },
@@ -250,13 +265,10 @@ const Experiences = () => {
                     Curated Experience Package
                   </p>
                   <h2 className="font-serif text-2xl md:text-3xl leading-tight mb-4">
-                    The Art Village Sampler — three days, all the moments that matter.
+                    The Art Village Sampler — Authentic Himachali Village Stay & Culture
                   </h2>
                   <p className="font-sans text-sm md:text-base text-muted-foreground leading-relaxed">
-                    A handpicked package weaving together a cultural village walk, farm-to-table
-                    cooking, a snowline hike, stargazing by the bonfire, traditional crafts, and an
-                    evening of music and dance. Built for travellers who want to taste it all
-                    without the planning.
+                    Escape Manali's crowds and discover Chachogi, a hidden Himalayan gem! Stay in a traditional Himachali home, savour local flavours, and immerse yourself in mountain culture for an authentic experience.
                   </p>
                 </div>
                 <div className="flex flex-col gap-3">
