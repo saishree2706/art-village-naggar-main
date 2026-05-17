@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { X } from "lucide-react";
+import { X, CalendarDays, ArrowDown } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import PageTransition from "@/components/PageTransition";
 import ImageCarousel from "@/components/ImageCarousel";
+import AvailabilityCalendar from "@/components/AvailabilityCalendar";
 import SEO from "@/components/SEO";
 import { AccommodationSchema, BreadcrumbSchema } from "@/components/StructuredData";
 import { SITE_URL } from "@/lib/seo";
@@ -131,6 +132,31 @@ const mandatoryNotices = [
 
 const Stays = () => {
   const [modalOpen, setModalOpen] = useState(true);
+  const [availabilityInView, setAvailabilityInView] = useState(false);
+  const availabilityRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const target = availabilityRef.current;
+    if (!target) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setAvailabilityInView(entry.isIntersecting),
+      { rootMargin: "0px 0px -40% 0px", threshold: 0 }
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollToAvailability = () => {
+    const target = availabilityRef.current;
+    if (!target) return;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    target.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  };
 
   return (
     <PageTransition>
@@ -251,6 +277,17 @@ const Stays = () => {
                 Heritage rooms in a 100-year-old Kathkuni house, each with its own character,
                 view, and story to tell.
               </motion.p>
+              <motion.button
+                type="button"
+                onClick={scrollToAvailability}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: HERO_TIMING.description.delay + 0.2, duration: HERO_TIMING.description.duration, ease: EASING }}
+                className="inline-flex items-center gap-2 mt-7 font-sans text-[11px] tracking-[0.25em] uppercase text-foreground border-b border-foreground/40 pb-1 hover:border-foreground hover:gap-3 transition-all"
+              >
+                Check live availability
+                <ArrowDown className="w-3.5 h-3.5" />
+              </motion.button>
             </ScrollReveal>
           </div>
         </section>
@@ -450,6 +487,34 @@ const Stays = () => {
           </div>
         </section>
 
+        {/* Live Availability Calendar */}
+        <section
+          id="availability"
+          ref={availabilityRef}
+          className="px-5 md:px-12 py-14 md:py-24 bg-secondary/20 scroll-mt-20"
+        >
+          <div className="max-w-5xl mx-auto">
+            <ScrollReveal>
+              <div className="text-center mb-10 md:mb-14">
+                <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-3">
+                  Live Availability
+                </p>
+                <h2 className="font-serif text-2xl md:text-3xl mb-4">
+                  Check Your Dates
+                </h2>
+                <p className="font-sans text-sm md:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                  Pick a check-in and check-out date to see what's open. Greyed-out
+                  nights are already booked. Confirm by sending us a quick WhatsApp.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal>
+              <AvailabilityCalendar />
+            </ScrollReveal>
+          </div>
+        </section>
+
         {/* WhatsApp CTA */}
         <section className="py-14 md:py-28 px-5 md:px-12 bg-secondary/30">
           <div className="max-w-3xl mx-auto text-center">
@@ -478,6 +543,26 @@ const Stays = () => {
 
         <Footer />
       </main>
+
+      {/* Floating "Check dates" button — visible while availability section is out of view */}
+      {!modalOpen && (
+        <button
+          type="button"
+          onClick={scrollToAvailability}
+          aria-label="Scroll to availability calendar"
+          className={`fixed bottom-6 right-6 z-40 flex items-center gap-2 bg-foreground text-background pl-4 pr-5 py-3 shadow-lg hover:bg-foreground/90 transition-all duration-300 ${
+            availabilityInView
+              ? "opacity-0 pointer-events-none translate-y-3"
+              : "opacity-100 translate-y-0"
+          }`}
+        >
+          <CalendarDays className="w-4 h-4" />
+          <span className="hidden sm:inline font-sans text-[8px] tracking-[0.2em] uppercase">
+            Check
+            Dates
+          </span>
+        </button>
+      )}
     </PageTransition>
   );
 };
