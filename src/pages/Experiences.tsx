@@ -20,6 +20,7 @@ import expGameNight from "@/assets/experiences/game_night.jpeg";
 import expDanceNight from "@/assets/experiences/dance_night.jpg";
 import snowPhoto from "@/assets/experiences/snowline_trek.jpg";
 import traditionalDanceNight from "@/assets/experiences/traditionalAttire.jpg";
+import danceNightVideo from "@/assets/experiences/dance_night.mp4";
 
 const WHATSAPP_ENQUIRE_URL =
   "https://wa.me/919816650400?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20the%20Art%20Village%20Experience%20Package";
@@ -33,6 +34,7 @@ interface Experience {
   description: string;
   highlights: string[];
   image: string;
+  video?: string;
 }
 
 const experiences: Experience[] = [
@@ -152,6 +154,7 @@ const experiences: Experience[] = [
       "Live acoustic and folk music performances",
     ],
     image: traditionalDanceNight,
+    video: danceNightVideo,
   },
   {
     title: "Bon Fire Storytelling & Music",
@@ -328,12 +331,26 @@ const Experiences = () => {
                     } ${isReversed ? "md:[direction:rtl]" : ""}`}
                   >
                     <div className="aspect-[4/3] overflow-hidden group">
-                      <img
-                        src={exp.image}
-                        alt={exp.title}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                        loading="lazy"
-                      />
+                      {exp.video ? (
+                        <video
+                          src={exp.video}
+                          poster={exp.image}
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="metadata"
+                          aria-label={exp.title}
+                          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        />
+                      ) : (
+                        <img
+                          src={exp.image}
+                          alt={exp.title}
+                          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      )}
                     </div>
 
                     <div className={isReversed ? "md:[direction:ltr]" : ""}>

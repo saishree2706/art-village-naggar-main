@@ -52,7 +52,8 @@
       "Bash(node -e ' *)",
       "Bash(node *)",
       "Bash(git ls-files *)",
-      "Bash(rm tracked_assets.tmp.txt)"
+      "Bash(rm tracked_assets.tmp.txt)",
+      "Bash(dir \"src\\\\assets\\\\experiences\\\\dance_night.mp4\")"
     ]
   }
 }
