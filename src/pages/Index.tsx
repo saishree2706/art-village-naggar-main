@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useMemo } from "react";
 import Navigation from "@/components/Navigation";
 import PageTransition from "@/components/PageTransition";
 import SplashScreen from "@/components/SplashScreen";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import SEO from "@/components/SEO";
+import InstagramFeed from "@/components/InstagramFeed";
 import { OrganizationSchema } from "@/components/StructuredData";
 import { EASING, HERO_TIMING } from "@/lib/animations";
 import heroImg from "@/assets/home/20260222-P1034400.jpg";
@@ -38,6 +39,42 @@ const Index = () => {
   });
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  const randomExperiences = useMemo(() => {
+    const allExperiences = [
+      {
+        title: "Village Cultural & Heritage Tours",
+        description: "Explore temple tours, architectural walks, and timeless Kathkuni craftsmanship.",
+        img: expCultural,
+      },
+      {
+        title: "Farm-to-Table Cooking",
+        description: "Prepare meals using fresh farm ingredients and create wood-fired pizzas.",
+        img: expCooking,
+      },
+      {
+        title: "Snowline Hikes & Meadow Retreat",
+        description: "Trek through crisp mountain air to breathtaking alpine landscapes.",
+        img: expHikes,
+      },
+      {
+        title: "Stargazing & Night Camping",
+        description: "Lie beneath a sky ablaze with stars, warmed by the crackling campfire.",
+        img: expStargazing,
+      },
+      {
+        title: "Forest Walks & Hidden Trails",
+        description: "Discover secret trails that lead to breathtaking views through forested areas.",
+        img: expForest,
+      },
+      {
+        title: "Shepherd Cafe & Dining",
+        description: "Local Himachali, Mediterranean, and Asian cuisine with farm-to-table freshness.",
+        img: dining1,
+      },
+    ];
+    return [...allExperiences].sort(() => Math.random() - 0.5).slice(0, 3);
+  }, []);
 
   return (
     <PageTransition>
@@ -228,7 +265,7 @@ const Index = () => {
             ].map((tier, i) => (
               <ScrollReveal key={tier.title} delay={i * 0.15}>
                 <Link to={tier.link} className="group block">
-                  <div className="aspect-[3/4] overflow-hidden mb-5">
+                  <div className="aspect-square overflow-hidden mb-5">
                     <img
                       src={tier.img}
                       alt={tier.title}
@@ -274,38 +311,7 @@ const Index = () => {
           </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {[
-              {
-                title: "Village Cultural & Heritage Tours",
-                description: "Explore temple tours, architectural walks, and timeless Kathkuni craftsmanship.",
-                img: expCultural,
-              },
-              {
-                title: "Farm-to-Table Cooking",
-                description: "Prepare meals using fresh farm ingredients and create wood-fired pizzas.",
-                img: expCooking,
-              },
-              {
-                title: "Snowline Hikes & Meadow Retreat",
-                description: "Trek through crisp mountain air to breathtaking alpine landscapes.",
-                img: expHikes,
-              },
-              {
-                title: "Stargazing & Night Camping",
-                description: "Lie beneath a sky ablaze with stars, warmed by the crackling campfire.",
-                img: expStargazing,
-              },
-              {
-                title: "Forest Walks & Hidden Trails",
-                description: "Discover secret trails that lead to breathtaking views through forested areas.",
-                img: expForest,
-              },
-              {
-                title: "Shepherd Cafe & Dining",
-                description: "Local Himachali, Mediterranean, and Asian cuisine with farm-to-table freshness.",
-                img: dining1,
-              },
-            ].map((exp, i) => (
+            {randomExperiences.map((exp, i) => (
               <ScrollReveal key={exp.title} delay={i * 0.1}>
                 <Link to="/experiences" className="group block">
                   <div className="aspect-[4/3] overflow-hidden mb-4">
@@ -338,6 +344,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Instagram */}
+      <InstagramFeed />
+
       {/* CTA */}
       <section className="py-16 md:py-28 px-5 md:px-12 bg-secondary/50 text-center">
         <ScrollReveal>
@@ -353,10 +362,10 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/collaborate"
+              to="/stays"
               className="inline-block font-sans text-xs tracking-[0.2em] uppercase bg-foreground text-background px-8 py-4 hover:bg-foreground/90 transition-all duration-500"
             >
-              Volunteer & Collaborate
+              Book a Stay
             </Link>
             <Link
               to="/shepherd-magazine"
@@ -366,8 +375,8 @@ const Index = () => {
             </Link>
           </div>
           <p className="font-sans text-sm text-muted-foreground mt-6">
-            <Link to="/stays" className="underline hover:text-foreground transition-colors">
-              Looking to book a stay?
+            <Link to="/collaborate" className="underline hover:text-foreground transition-colors">
+              Volunteer & Collaborate
             </Link>
           </p>
         </ScrollReveal>

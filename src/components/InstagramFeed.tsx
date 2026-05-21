@@ -68,7 +68,7 @@ function SkeletonGrid() {
   return (
     <>
       {/* Desktop skeleton */}
-      <div className="hidden md:block aspect-square max-w-4xl mx-auto">
+      <div className="hidden md:block aspect-square">
         <div className="grid h-full grid-cols-3 grid-rows-3 gap-px bg-border animate-pulse">
           <div className="col-span-2 row-span-2 bg-secondary" />
           {[0, 1, 2, 3, 4].map((i) => (
@@ -78,7 +78,7 @@ function SkeletonGrid() {
       </div>
 
       {/* Mobile skeleton */}
-      <div className="md:hidden max-w-md mx-auto animate-pulse">
+      <div className="md:hidden animate-pulse">
         <div className="aspect-[2/1] bg-secondary mb-px" />
         <div className="grid grid-cols-2 gap-px bg-border">
           {[0, 1, 2, 3].map((i) => (
@@ -100,39 +100,17 @@ export default function InstagramFeed() {
   }
 
   const visible = posts?.slice(0, 6) ?? [];
-  const newestDate = visible[0] ? formatInstagramDate(visible[0].timestamp) : "";
 
   return (
-    <section className="px-5 md:px-12 pt-12 md:pt-16 pb-16 md:pb-24">
-      <div className="max-w-5xl mx-auto">
-        {/* Magazine section mark — thick rule, centered ornament + label, hairline */}
+    <section className="py-14 md:py-24 px-5 md:px-12">
+      <div className="max-w-6xl mx-auto">
         <ScrollReveal>
-          <div className="mb-12 md:mb-16">
-            <div className="h-[3px] bg-foreground" />
-            <div className="py-7 md:py-9 text-center">
-              <span
-                aria-hidden
-                className="block font-serif text-xl md:text-2xl text-foreground/30 leading-none mb-4 tracking-[0.6em]"
-              >
-                ·  ·  ·
-              </span>
-              <p className="font-sans text-[10px] md:text-xs tracking-[0.4em] uppercase text-muted-foreground">
-                From the Notebook
-              </p>
-            </div>
-            <div className="h-px bg-border" />
-          </div>
-
-          <div className="mb-10 md:mb-12 flex items-end justify-between flex-wrap gap-4">
-            <h2 className="font-serif text-2xl md:text-3xl leading-tight">
-              Latest from <span className="italic">@{INSTAGRAM_HANDLE}</span>
-            </h2>
-            {newestDate && !isLoading && (
-              <p className="font-sans text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
-                Updated {newestDate}
-              </p>
-            )}
-          </div>
+          <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground mb-4">
+            Follow Along
+          </p>
+          <h2 className="font-serif text-3xl md:text-4xl mb-12">
+            Moments from Chachogi.
+          </h2>
         </ScrollReveal>
 
         {isLoading && <SkeletonGrid />}
@@ -140,7 +118,7 @@ export default function InstagramFeed() {
         {!isLoading && visible.length >= 6 && (
           <ScrollReveal>
             {/* Desktop — bento grid */}
-            <div className="hidden md:block aspect-square max-w-4xl mx-auto">
+            <div className="hidden md:block aspect-square">
               <div className="grid h-full grid-cols-3 grid-rows-3 gap-px bg-border">
                 <Tile post={visible[0]} className="col-span-2 row-span-2" />
                 {visible.slice(1, 6).map((post) => (
@@ -150,7 +128,7 @@ export default function InstagramFeed() {
             </div>
 
             {/* Mobile — stacked bento */}
-            <div className="md:hidden max-w-md mx-auto">
+            <div className="md:hidden">
               <Tile post={visible[0]} className="block aspect-[2/1]" />
               <div className="grid grid-cols-2 gap-px bg-border mt-px">
                 {visible.slice(1, 5).map((post) => (
@@ -169,7 +147,7 @@ export default function InstagramFeed() {
         {/* Fallback grid for < 6 posts */}
         {!isLoading && visible.length > 0 && visible.length < 6 && (
           <ScrollReveal>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-border max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-border">
               {visible.map((post) => (
                 <Tile key={post.id} post={post} className="aspect-square" />
               ))}
@@ -179,15 +157,14 @@ export default function InstagramFeed() {
 
         {/* View on Instagram */}
         <ScrollReveal>
-          <div className="mt-10 md:mt-12 flex justify-center">
+          <div className="mt-12">
             <a
               href={INSTAGRAM_PROFILE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-sans text-[10px] tracking-[0.25em] uppercase border-b border-foreground/30 pb-1 hover:border-foreground hover:gap-3 transition-all inline-flex items-center gap-2"
+              className="inline-block font-sans text-xs tracking-[0.2em] uppercase border-b border-foreground/30 pb-1 hover:border-foreground transition-all duration-500"
             >
               View on Instagram
-              <span aria-hidden>→</span>
             </a>
           </div>
         </ScrollReveal>

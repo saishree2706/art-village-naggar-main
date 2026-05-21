@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import PageTransition from "@/components/PageTransition";
 import SEO from "@/components/SEO";
-import InstagramFeed from "@/components/InstagramFeed";
 import { EASING } from "@/lib/animations";
 
 import { useNotionArticles, fallbackArticles, formatArticleDate, type Article } from "@/hooks/useNotionArticles";
@@ -517,8 +516,6 @@ const Blogs = () => {
           )}
 
         </AnimatePresence>
-
-        <InstagramFeed />
 
         <Footer variant="magazine" />
       </main>

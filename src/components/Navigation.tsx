@@ -72,28 +72,35 @@ const Navigation = ({ variant = "default" }: NavigationProps) => {
           </Link>
 
           {variant === "magazine" ? (
-            <Link
-              to="/shepherd-magazine"
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className={`
                 absolute left-1/2 -translate-x-1/2
                 font-serif text-xl tracking-wide font-medium
                 transition-colors duration-300 hover:opacity-70
+                bg-transparent border-0 cursor-pointer
                 ${textColorClass}
               `}
             >
               Shepherd Magazine
-            </Link>
+            </button>
           ) : (
             <>
-              <span className={`
-                absolute left-1/2 -translate-x-1/2
-                font-rubik text-md tracking-wide
-                hidden sm:inline
-                transition-colors duration-300
-                ${textColorClass}
-              `}>
+              <button
+                type="button"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                className={`
+                  absolute left-1/2 -translate-x-1/2
+                  font-rubik text-md tracking-wide
+                  hidden sm:inline
+                  transition-colors duration-300 hover:opacity-70
+                  bg-transparent border-0 cursor-pointer
+                  ${textColorClass}
+                `}
+              >
                 Adaptive Rural Tourism
-              </span>
+              </button>
 
               {/* Desktop Navigation */}
               <nav className="hidden lg:flex items-center gap-8">

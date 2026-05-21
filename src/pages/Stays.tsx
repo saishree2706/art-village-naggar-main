@@ -20,6 +20,8 @@ import entireKathkuniVilla from "@/assets/Entire Kathkuni House (6 Bedrooms)/Ent
 // Import images - Fall Maroon Attic Room
 import fallMaroon1 from "@/assets/Fall Maroon Attic Room/Fall Maroon Attic Room 1.webp";
 import fallMaroon2 from "@/assets/Fall Maroon Attic Room/Fall Maroon Attic Room 2.webp";
+import fallMaroon3 from "@/assets/Fall Maroon Attic Room/Fall Maroon Attic Room 3.webp";
+
 import fallMaroon4 from "@/assets/Fall Maroon Attic Room/Fall Maroon Attic Room 4.webp";
 
 // Import images - Spring Green Attic Room
@@ -49,6 +51,8 @@ import winterBlue5 from "@/assets/Winter Blue Duplex Studio/Winter Blue Duplex S
 import winterBlue6 from "@/assets/Winter Blue Duplex Studio/Winter Blue Duplex Studio 6.webp";
 import winterBlue7 from "@/assets/Winter Blue Duplex Studio/Winter Blue Duplex Studio 7.webp";
 import winterBlue8 from "@/assets/Winter Blue Duplex Studio/Winter Blue Duplex Studio 8.webp";
+import winterBlue9 from "@/assets/Winter Blue Duplex Studio/Winter Blue Duplex Studio 9.webp";
+
 
 // Featured accommodation
 const featuredAccommodation = {
@@ -83,7 +87,7 @@ const duplexSuites = [
     name: "Winter Blue Duplex Studio",
     description:
       "A signature suite crafted for an instagrammable lifestyle experience. Features panoramic views, healing stone hot tub, charming fireplace, and thoughtful design details.",
-    images: [winterBlue1, winterBlue2, winterBlue3, winterBlue4, winterBlue5, winterBlue6, winterBlue7, winterBlue8],
+    images: [winterBlue1, winterBlue2, winterBlue3, winterBlue4, winterBlue5, winterBlue6, winterBlue7, winterBlue8, winterBlue9],
     airbnbLink: "https://www.airbnb.co.in/rooms/1318115446497662496",
     capacity: "2-4 Guests",
   },
@@ -105,7 +109,7 @@ const atticRooms = [
     name: "Fall Maroon Attic Room",
     description:
       "Double room with kitchenette, queen bed, and attached shower bath. Attached balcony with garden views and ample natural light.",
-    images: [fallMaroon1, fallMaroon2, fallMaroon4],
+    images: [fallMaroon1, fallMaroon2, fallMaroon3, fallMaroon4],
     airbnbLink: "https://www.airbnb.co.in/rooms/1055715753752546041",
     capacity: "2 Guests",
   },
