@@ -109,7 +109,7 @@ const atticRooms = [
     name: "Fall Maroon Attic Room",
     description:
       "Double room with kitchenette, queen bed, and attached shower bath. Attached balcony with garden views and ample natural light.",
-    images: [fallMaroon1, fallMaroon2, fallMaroon3, fallMaroon4],
+    images: [fallMaroon1, fallMaroon2, fallMaroon3],
     airbnbLink: "https://www.airbnb.co.in/rooms/1055715753752546041",
     capacity: "2 Guests",
   },
